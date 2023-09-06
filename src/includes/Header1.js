@@ -1,7 +1,15 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 function Header(props) {
+  const [acc, setAcc] = useState(JSON.parse(localStorage.getItem('user')));
+  const navigate = useNavigate();
+  const LogOut = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('jwtToken');
+    setAcc(null);
+  };
+  const url = 'http://127.0.0.1:8000';
   return (
     <>
         <header className="app-header app-header-dark">
@@ -545,12 +553,12 @@ function Header(props) {
                     aria-expanded="false"
                   >
                     <span className="user-avatar user-avatar-md">
-                      <img src="assets/images/avatars/profile.jpg" alt="" />
+                      <img src={url + acc.image} alt="" />
                     </span>{" "}
                     <span className="account-summary pr-lg-4 d-none d-lg-block">
-                      <span className="account-name">Beni Arisandi</span>{" "}
+                      <span className="account-name">{acc.name}</span>{" "}
                       <span className="account-description">
-                        Marketing Manager
+                        {acc.email}
                       </span>
                     </span>
                   </button>{" "}
@@ -565,10 +573,10 @@ function Header(props) {
                     <a className="dropdown-item" href="user-profile.html">
                       <span className="dropdown-icon oi oi-person" /> Profile
                     </a>{" "}
-                    <a className="dropdown-item" href="auth-signin-v1.html">
+                    <Link to={'login'} onClick={LogOut} className="dropdown-item" href="auth-signin-v1.html">
                       <span className="dropdown-icon oi oi-account-logout" />{" "}
-                      Logout
-                    </a>
+                      Đăng xuất
+                    </Link>
                     <div className="dropdown-divider" />
                     <a className="dropdown-item" href="#">
                       Help Center
