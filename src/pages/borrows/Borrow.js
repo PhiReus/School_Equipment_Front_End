@@ -8,19 +8,19 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 function Borrow(props) {
     const [borrows, setBorrows] = useState([]);
-
+    const user = JSON.parse(localStorage.getItem('user'));
     useEffect(() => {
         const borrowModel = new BorrowModel();
         async function fetchData() {
             try {
                 const data = await borrowModel.getAllBorrows();
-                setBorrows(data.data); 
+                setBorrows(data.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         }
         fetchData();
-    }, []); 
+    }, []);
     // Chuyển đổi ngày tháng sang định dạng dễ đọc
     function formatDateString(dateString) {
         const formattedDate = format(new Date(dateString), 'dd/MM/yyyy HH:mm:ss'); // Định dạng theo ý muốn của bạn
@@ -51,16 +51,18 @@ function Borrow(props) {
                 </thead>
                 <tbody>
                     {borrows.map((borrow, index) => (
-                        <tr key={index}>
-                            <td>{index + 1}</td>
-                            <td>{borrow.user_id}</td>
-                            <td>{formatDateString(borrow.created_at)}</td>
-                            <td>{new Date(borrow.borrow_date).toLocaleDateString()}</td>
-                            <td>{borrow.status ? 'Đã trả' : 'Chưa trả'}</td>
-                            <td>{borrow.approved === '2' ? 'Từ chối' : (borrow.approved === '1' ? 'Đã duyệt' : 'Chưa duyệt')}</td>
-
-                        </tr>
+                        borrow.user_id === user.id && (
+                            <tr key={index}>
+                                <td>{index + 1}</td>
+                                <td>{user.name}</td>
+                                <td>{formatDateString(borrow.created_at)}</td>
+                                <td>{new Date(borrow.borrow_date).toLocaleDateString()}</td>
+                                <td>{borrow.status ? 'Đã trả' : 'Chưa trả'}</td>
+                                <td>{borrow.approved === '2' ? 'Từ chối' : (borrow.approved === '1' ? 'Đã duyệt' : 'Chưa duyệt')}</td>
+                            </tr>
+                        )
                     ))}
+
                 </tbody>
             </table>
 
