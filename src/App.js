@@ -1,12 +1,13 @@
-import { Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
-import LayoutMaster from './layouts/LayoutMaster';
+import { Route, Routes } from "react-router-dom";
+import UserList from "./pages/users/UserList";
+import UserEdit from "./pages/users/UserEdit";
 
 function App() {
   return (
     <>
       <Routes>
-      <Route path="/" element={<Home/>}></Route>
+        <Route path="/" element={<UserList />}></Route>
+        <Route path="/users/:id/edit" element={<UserEdit />}></Route>
       </Routes>
     </>
   );
