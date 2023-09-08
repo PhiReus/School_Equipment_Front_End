@@ -27,7 +27,7 @@ function BorrowCreate(props) {
   }, []);
 
   const handleAddToDanhSach = () => {
-    const selectedDevice = $('#devices'); 
+    const selectedDevice = $('#devices');
     const device_id = selectedDevice.val();
 
     if (device_id && !deviceIds.includes(device_id)) {

@@ -15,10 +15,8 @@ function DeviceList(props) {
     const [devices, setDevices] = useState([]);
     const cart = useSelector((state) => state.cart);
     const dispatch = useDispatch();
-
     useEffect(() => {
         const deviceModel = new DeviceModel();
-
         async function fetchData() {
             try {
                 const data = await deviceModel.getAllDevices();
@@ -27,10 +25,8 @@ function DeviceList(props) {
                 console.error('Error fetching data:', error);
             }
         }
-
         fetchData();
     }, []);
-
     const handleAddToCart = (device) => {
         // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa
         const existingItemIndex = cart.findIndex(item => item.device_id === device.id);
@@ -77,7 +73,6 @@ function DeviceList(props) {
                         </li>
                     </ol>
                 </nav>
-                {/* <button type="button" class="btn btn-success btn-floated"><span class="fa fa-plus"></span></button> */}
                 <div className="d-md-flex align-items-md-start">
                     <h1 className="page-title mr-sm-auto"> Danh Sách Thiết Bị</h1>
                 </div>
@@ -133,7 +128,7 @@ function DeviceList(props) {
                         </div>
 
                         <div className="table-responsive">
-                            <table class="table">
+                            <table className="table">
                                 <thead>
                                     <tr>
                                         <th>STT</th>
@@ -169,10 +164,17 @@ function DeviceList(props) {
                                                     <FontAwesomeIcon icon={faPlus} />
                                                 </button>
                                             </td>
+
                                         </tr>
+
                                     ))}
+
                                 </tbody>
+
                             </table>
+                            <Link to="/cart" className="btn btn-primary float-right">
+                                Xem Giỏ Mượn
+                            </Link>
                         </div>
                     </div>
                 </div>
