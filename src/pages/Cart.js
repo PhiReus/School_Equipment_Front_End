@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import LayoutMaster from '../layouts/LayoutMaster';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux'; // Thêm import cho useDispatch
@@ -8,6 +9,7 @@ import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { format } from 'date-fns';
 import RoomModel from '../models/RoomModel';
+import BorrowModel from '../models/BorrowModel';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'; //
@@ -20,62 +22,32 @@ const SignupSchema = Yup.object().shape({
 
 function Cart(props) {
     const navigate = useNavigate();
+    
     const [data, setData] = useState([]);
     const [formData, setFormData] = useState({
-        user_id: '',
-        created_at: '',
         borrow_date: '',
         borrow_note: '',
         devices:
         {
+            id: [],
             lesson_name: [],
             quantity: [],
             session: [],
+            lecture_name:  [],
+            room_id:  [],
+            lecture_number:  [],
+            return_date:  [],
         }
-        ,
     });
-    const [createdAt, setCreatedAt] = useState('');
     const dispatch = useDispatch();
-    const user = JSON.parse(localStorage.getItem('user')); // Lấy thông tin người dùng từ local storage
+    
     const [rooms, setRooms] = useState([]);
+    const [createdAt, setCreatedAt] = useState('');
+
+    const user = JSON.parse(localStorage.getItem('user')); // Lấy thông tin người dùng từ local storage
+    const [userData, setUserData] = useState(user);
     useEffect(() => {
-        // Set gia tri cho cart
-        const cartData = JSON.parse(localStorage.getItem('cart')) || [];
-        setData(cartData);
-
-        // Set gia tri mac dinh cho lesson_name va quantity
-        let emptyLessons = [];
-        let emptyQuantity = [];
-        let emptySession = [];
-        let emptyLecture = [];
-        let emptyRoom = [];
-        let emptyLectureNumber = [];
-        let emptyReturn = [];
-
-        for (let i = 0; i < cartData.length; i++) {
-            emptyLessons.push('')
-            emptyQuantity.push(0)
-            emptySession.push('Sáng')
-            emptyLecture.push('')
-            emptyRoom.push('')
-            emptyLectureNumber.push('')
-            emptyReturn.push('')
-        }
-        let new_devices = {
-            lesson_name: emptyLessons,
-            quantity: emptyQuantity,
-            session: emptySession,
-            lecture_name: emptyLecture,
-            room_id: emptyRoom,
-            lecture_number: emptyLectureNumber,
-            return_date: emptyReturn,
-            
-        }
-        setFormData({ ...formData, devices: new_devices });
-
-        console.log(formData);
-
-
+       
         // Lấy ngày hiện tại và định dạng thành chuỗi yyyy-MM-ddTHH:mm để điền vào trường "Ngày tạo phiếu"
         const currentDate = new Date();
         const formattedDate = format(currentDate, "yyyy-MM-dd'T'HH:mm");
@@ -88,64 +60,85 @@ function Cart(props) {
             .catch((error) => {
                 console.error('Error fetching rooms:', error);
             });
+    }, []);
+    useEffect(() => {
+        
 
+        // Set gia tri cho cart
+        const cartData = JSON.parse(localStorage.getItem('cart')) || [];
+        setData(cartData);
+
+        console.log(cartData);
+
+        // Set gia tri mac dinh cho lesson_name va quantity
+        let emptyDevice = [];
+        let emptyLessons = [];
+        let emptyQuantity = [];
+        let emptySession = [];
+        let emptyLecture = [];
+        let emptyRoom = [];
+        let emptyLectureNumber = [];
+        let emptyReturn = [];
+
+        for (let i = 0; i < cartData.length; i++) {
+            emptyDevice.push(cartData[i].device_id)
+            emptyLessons.push('')
+            emptyQuantity.push(cartData[i].quantity)
+            emptySession.push('Sáng')
+            emptyLecture.push('')
+            emptyRoom.push('1')
+            emptyLectureNumber.push('1')
+            emptyReturn.push('')
+        }
+        const new_devices = {
+            id: emptyDevice,
+            lesson_name: emptyLessons,
+            quantity: emptyQuantity,
+            session: emptySession,
+            lecture_name: emptyLecture,
+            room_id: emptyRoom,
+            lecture_number: emptyLectureNumber,
+            return_date: emptyReturn,
+        }
+
+        console.log(userData);
+        setFormData({ 
+            ...formData, 
+            devices: new_devices, 
+            user_id: userData.id 
+        });
     }, []);
 
 
-    const handleUpdateCart = (index, quantity) => {
-        const newCart = [...data];
-        newCart[index].quantity = quantity;
-        localStorage.setItem("cart", JSON.stringify(newCart));
+    const handleRemove = (index) => {
+        const newData = [...data];
+        newData.splice(index, 1);
+        localStorage.setItem("cart", JSON.stringify(newData));
         dispatch({
             type: SET_CART,
-            payload: newCart,
+            payload: newData,
         });
     };
 
-    const handleDecreaseQuantity = (index) => {
-        const newData = [...data];
-        if (newData[index].quantity > 1) {
-            newData[index].quantity--;
-            handleUpdateCart(index, newData[index].quantity);
+
+    const handleSubmit = async (values) => {
+        try {
+          const borrowModel = new BorrowModel();
+          const response = await borrowModel.createBorrow(values);
+      
+          if (response.status === 201) {
+            console.log('Borrow record created successfully:', response.data);
+            localStorage.removeItem('cart');
+            dispatch({ type: SET_CART, payload: [] });
+            navigate('/borrows');
+          } else {
+            console.error('Error creating borrow record.');
+          }
+        } catch (error) {
+          console.error('An error occurred:', error);
         }
-    };
-
-    const handleIncreaseQuantity = (index) => {
-        const newData = [...data];
-        newData[index].quantity++;
-        handleUpdateCart(index, newData[index].quantity);
-    };
-
-    const handleRemove = (index) => {
-        Swal.fire({
-            title: 'Bạn có chắc chắn?',
-            text: 'Bạn đang chuẩn bị xóa mục này khỏi phiếu mượn.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Có, xóa đi!',
-            cancelButtonText: 'Hủy',
-            reverseButtons: true,
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const newData = [...data];
-                newData.splice(index, 1);
-                localStorage.setItem("cart", JSON.stringify(newData));
-                dispatch({
-                    type: SET_CART,
-                    payload: newData,
-                });
-                Swal.fire('Đã xóa!', 'Mục đã được xóa khỏi phiếu mượn.', 'success');
-            }
-        });
-    };
-
-
-    const handleSubmit = (values) => {
-        console.log('Form submitted with values:', values);
-        // localStorage.removeItem('cart');
-        // dispatch({ type: SET_CART, payload: [] });
-        // navigate('/borrows');
-    };
+      };
+      
 
     return (
         <LayoutMaster>
@@ -181,28 +174,13 @@ function Cart(props) {
                                     <div className="col-lg-4">
                                         <div className="form-group">
                                             <label htmlFor="user_id">Người mượn</label>
-                                            <Field
-                                                type="text"
-                                                name="user_id"
-                                                className="form-control"
-                                                placeholder="Nhập người mượn"
-                                                value={user ? user.name : ''}
-                                                readOnly
-                                            />
-
+                                            <p className='form-control-static'>{userData ? userData.name : ''}</p>
                                         </div>
                                     </div>
                                     <div className="col-lg-4">
                                         <div className="form-group">
                                             <label htmlFor="created_at">Ngày tạo phiếu</label>
-                                            <Field
-                                                type="datetime-local" // Sử dụng datetime-local để hiển thị cả ngày và giờ
-                                                name="created_at"
-                                                className="form-control"
-                                                placeholder="Nhập ngày tạo phiếu"
-                                                value={createdAt}
-                                                onChange={(e) => setCreatedAt(e.target.value)}
-                                            />
+                                            <p className='form-control-static'>{createdAt}</p>
                                         </div>
                                     </div>
                                     <div className="col-lg-4">
@@ -222,7 +200,7 @@ function Cart(props) {
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="borrow_note">Ghi chú</label>
-                                    <textarea
+                                    <Field as="textarea"
                                         name="borrow_note"
                                         className="form-control"
                                         placeholder="Nhập ghi chú"
@@ -273,6 +251,7 @@ function Cart(props) {
                                                         <td>{index + 1}</td>
                                                         <td className="device-cell">
                                                             <div className="device-info">
+                                                            <Field type="hidden" name={`devices[id][${index}]`} value={item.device_id} />
                                                                 <Link to={`/borrows/${item.device_id}`} className="tile tile-img mr-1">
                                                                     <img
                                                                         className="img-fluid"
@@ -283,12 +262,12 @@ function Cart(props) {
                                                                 <span>{item.device ? item.device.name : 'Tên không tồn tại'}</span>
                                                             </div>
                                                         </td>
-                                                        <td>
-                                                            <div className="quantity-control">
-                                                                <button onClick={() => handleDecreaseQuantity(index)} className="quantity-btn">-</button>
-                                                                <span className="quantity-text">{item.quantity}</span>
-                                                                <button onClick={() => handleIncreaseQuantity(index)} className="quantity-btn">+</button>
-                                                            </div>
+                                                        <td width="100">
+                                                            <Field
+                                                                name={`devices[quantity][${index}]`}
+                                                                type="number"
+                                                                className="form-control input-sm"
+                                                            />
                                                         </td>
 
 
