@@ -70,7 +70,7 @@ function UserEdit(props) {
   }, []);
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files[0]; // Lấy tệp hình ảnh đầu tiên từ danh sách tệp được chọn
     setImage(file);
   };
 

@@ -5,8 +5,11 @@ import { Route, Routes } from 'react-router-dom';
 import LayoutMaster from './layouts/LayoutMaster';
 import Borrow from './pages/Borrow';
 import Device from './pages/DeviceList';
+import Borrow from './pages/borrows/Borrow';
+import BorrowCreate from './pages/borrows/BorrowCreate';
 import Login from './includes/Login';
 import ForgotPassword from './includes/ForgotPassword';
+import UserProfile from "./pages/users/UserProfile";
 
 
 function App() {
@@ -18,6 +21,9 @@ function App() {
         {/* <Route path="/" element={<Home />}></Route> */}
         <Route path="/" element={<UserList />}></Route>
         <Route path="/users/:id/edit" element={<UserEdit />}></Route>
+        <Route path="/users/:id" element={<UserProfile />}></Route>
+        <Route path="/Borrows" element={<Borrow/>}></Route>
+        <Route path="/Borrows/create" element={<BorrowCreate/>}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/forgot" element={<ForgotPassword />}></Route>
       </Routes>
