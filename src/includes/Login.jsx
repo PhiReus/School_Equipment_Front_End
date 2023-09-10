@@ -11,6 +11,7 @@ function Login(props) {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
+            console.log(1);
             const response = await axios.post('http://127.0.0.1:8000/api/auth/login', account);
             console.log(response.data?.access_token);
             const { token } = response.data?.access_token;

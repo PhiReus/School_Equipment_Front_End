@@ -1,8 +1,8 @@
 import axios from "axios";
-
+import axiosClient from './axiosClient';
 class UserModel {
     constructor () {
-        this.api_url = 'http://127.0.0.1:8000/api/users/';
+        this.api_url = 'http://localhost:8000/api/users/';
     }
     async all() {
         const res = await axios.get(this.api_url);
@@ -15,7 +15,7 @@ class UserModel {
       }
     
       async store(data) {
-        const res = await axios.post(this.api_url , data);
+        const res = await axiosClient.post(this.api_url , data);
         return res;
       }
     

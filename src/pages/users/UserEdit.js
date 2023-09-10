@@ -45,7 +45,6 @@ function UserEdit(props) {
       .then((res) => {
         setForm(res.data);
         setImagePreview(res.data.image);
-        console.log(res.data.image);
       })
       .catch((err) => {
         console.error(err);
@@ -73,10 +72,25 @@ function UserEdit(props) {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setImage(file);
-    console.log(file);
   };
 
   const handleSubmit = (data) => {
+    const formData = new FormData();
+    const inputElement = document.getElementById('fileInput');
+  // Lấy đối tượng File từ input
+    const file = inputElement.files[0];
+    formData.append('image', file);
+    formData.append("name", data.name);
+    formData.append("email", data.email);
+    formData.append("address", data.address);
+    formData.append("phone", data.phone);
+    formData.append("gender", data.gender);
+    formData.append("birthday", data.birthday);
+    formData.append("group_id", data.group_id);
+    formData.append("nest_id", data.nest_id);
+    formData.append("password", data.password);
+
+    
     UserModel.update(id, data)
       .then((res) => {
         console.log(res);
@@ -85,6 +99,7 @@ function UserEdit(props) {
       .catch((err) => {
         console.error("Lỗi khi sửa :", err);
       });
+    
   };
   // console.log(form);
   return (
@@ -238,10 +253,12 @@ function UserEdit(props) {
                   <label htmlFor="tf1">Hình ảnh</label>{" "}
                   <input
                     type="file"
-                    name="image" // Đảm bảo trường tương ứng với hình ảnh có tên "image"
+                    id="fileInput"
+                    name="image"
                     className="form-control"
                     placeholder="Chọn hình ảnh"
-                    onChange={(e) => handleImageChange(e)} // Thêm sự kiện onChange
+                    onChange={(e) => handleImageChange(e)}
+                    // value={image} // Thêm thuộc tính value
                   />
                   <small className="form-text text-muted" />
                 </div>
