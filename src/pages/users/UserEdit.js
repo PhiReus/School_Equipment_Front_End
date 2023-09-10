@@ -45,7 +45,7 @@ function UserEdit(props) {
       .then((res) => {
         setForm(res.data);
         setImagePreview(res.data.image);
-        console.log(res.data.image);
+        // console.log(res.data.image);
       })
       .catch((err) => {
         console.error(err);
@@ -71,12 +71,14 @@ function UserEdit(props) {
   }, []);
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files[0]; // Lấy tệp hình ảnh đầu tiên từ danh sách tệp được chọn
     setImage(file);
+    // Bạn cũng có thể xem tên của tệp để xác nhận rằng nó đã được chọn đúng
     console.log(file);
   };
 
   const handleSubmit = (data) => {
+    console.log(data);
     UserModel.update(id, data)
       .then((res) => {
         console.log(res);
