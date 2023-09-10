@@ -12,6 +12,9 @@ function App() {
   return (
     <>
       <Routes>
+      <Route path="/Borrows" element={<Borrow/>}></Route>
+      <Route path="/Devices" element={<Device/>}></Route>
+        <Route path="/" element={<Home />}></Route>
         <Route path="/" element={<UserList />}></Route>
         <Route path="/users/:id/edit" element={<UserEdit />}></Route>
         <Route path="/users/:id" element={<UserProfile />}></Route>
