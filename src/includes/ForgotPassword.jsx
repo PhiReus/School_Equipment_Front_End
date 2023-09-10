@@ -1,13 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Blank from '../layouts/Blank';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function ForgotPassword(props) {
-    
+    const [email, setEmail] = useState({
+        email : ''
+    });
+    const navigate = useNavigate();
+
+    const handleForgot = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post('http://127.0.0.1:8000/api/auth/forgot_password', { email: email.email });
+            alert('Mật Khẩu mới đã được gửi vào email!');
+        } catch {
+            alert('thất bại');
+        }
+    }
+    const handleOnChange = (e) => {
+        setEmail({...email,[e.target.name]:e.target.value});
+    }
 
     return (
         <Blank>
-            <form method="POST" action="#" className="auth-form auth-form-reflow">
+            <form onSubmit={handleForgot} action="#" className="auth-form auth-form-reflow">
                 <div className="text-center mb-4">
                     <div className="mb-4">
                         <img
@@ -33,6 +50,8 @@ function ForgotPassword(props) {
                         required=""
                         autofocus=""
                         className="form-control form-control-lg"
+                        value={email.email}
+                        onChange={handleOnChange}
                     />
                     <p className="text-muted">
                         <small>
