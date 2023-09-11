@@ -13,6 +13,7 @@ import UserProfile from "./pages/users/UserProfile";
 function App() {
   return (
     <>
+    <BrowserRouter>
       <Routes>
       <Route path="/Cart" element={<Cart/>}></Route>
         <Route path="/users/profile" element={<UserProfile />}></Route>
@@ -22,6 +23,7 @@ function App() {
         <Route path="/login" element={<Login />}></Route>
         <Route path="/forgot" element={<ForgotPassword />}></Route>
       </Routes>
+  </BrowserRouter>
     </>
   );
 }
