@@ -7,22 +7,35 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { SET_CART } from '../redux/action';
 import Swal from 'sweetalert2';
-
+import DeviceTypeModel from '../models/DeviceTypeModel';
 
 const imageBaseUrl = 'http://127.0.0.1:8000'; // Đường dẫn cơ sở cho ảnh
 
 function DeviceList(props) {
     const [devices, setDevices] = useState([]);
+    const [deviceTypes, setDeviceTypes] = useState([]);
+    const [searchName, setSearchName] = useState(''); // State for search input
+    const [searchQuantity, setSearchQuantity] = useState(''); // State for search input
+    const [searchDeviceType, setSearchDeviceType] = useState('');
     const cart = useSelector((state) => state.cart);
     const dispatch = useDispatch();
 
     useEffect(() => {
         const deviceModel = new DeviceModel();
+        const deviceTypeModel = new DeviceTypeModel();
 
         async function fetchData() {
             try {
-                const data = await deviceModel.getAllDevices();
-                setDevices(data); // Lưu danh sách thiết bị vào state
+                const deviceData = await deviceModel.getAllDevices();
+                const deviceTypeData = await deviceTypeModel.getDeviceType();
+
+                const devicesWithTypes = deviceData.map((device) => ({
+                    ...device,
+                    device_type: deviceTypeData.find((type) => type.id === device.device_type_id),
+                }));
+
+                setDevices(devicesWithTypes);
+                setDeviceTypes(deviceTypeData);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -32,20 +45,17 @@ function DeviceList(props) {
     }, []);
 
     const handleAddToCart = (device) => {
-        // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa
         const existingItemIndex = cart.findIndex(item => item.device_id === device.id);
 
         if (existingItemIndex !== -1) {
-            // Sản phẩm đã có trong giỏ hàng, cộng thêm số lượng
             const updatedCart = [...cart];
             updatedCart[existingItemIndex].quantity++;
             localStorage.setItem('cart', JSON.stringify(updatedCart));
             dispatch({ type: SET_CART, payload: updatedCart });
         } else {
-            // Sản phẩm chưa có trong giỏ hàng, thêm mới
             const item = {
                 device_id: device.id,
-                quantity: 1, // Số lượng mặc định là 1, bạn có thể thay đổi nếu cần
+                quantity: 1,
                 device: device,
             };
 
@@ -54,32 +64,35 @@ function DeviceList(props) {
             dispatch({ type: SET_CART, payload: updatedCart });
         }
 
-        // Hiển thị thông báo sử dụng sweetalert2
         Swal.fire({
             icon: 'success',
             title: 'Thiết bị đã được thêm vào phiếu mượn',
             showConfirmButton: false,
-            timer: 1500, // Thời gian hiển thị thông báo (ms)
+            timer: 1500,
         });
     };
 
-
+    // Filter devices based on the search input
+    const filteredDevices = devices.filter((device) =>
+    device.name.toLowerCase().includes(searchName.toLowerCase()) &&
+    (searchQuantity === '' || device.quantity.toString().includes(searchQuantity)) &&
+    (searchDeviceType === '' || device.device_type.name.toLowerCase().includes(searchDeviceType.toLowerCase()))
+);
     return (
         <LayoutMaster>
             <header className="page-title-bar">
                 <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item active">
-                            <a href="{{ route('devices.index') }}">
+                            <Link to="/devices">
                                 <i className="breadcrumb-icon fa fa-angle-left mr-2" />
                                 Trang Chủ
-                            </a>
+                            </Link>
                         </li>
                     </ol>
                 </nav>
-                {/* <button type="button" class="btn btn-success btn-floated"><span class="fa fa-plus"></span></button> */}
                 <div className="d-md-flex align-items-md-start">
-                    <h1 className="page-title mr-sm-auto"> Danh Sách Thiết Bị</h1>
+                    <h1 className="page-title mr-sm-auto">Danh Sách Thiết Bị</h1>
                 </div>
             </header>
             <div className="page-section">
@@ -87,16 +100,22 @@ function DeviceList(props) {
                     <div className="card-header">
                         <ul className="nav nav-tabs card-header-tabs">
                             <li className="nav-item">
-                                <a className="nav-link active " href="{{ route('devices.index') }}">
+                                <Link className="nav-link active" to="/devices">
                                     Tất Cả
-                                </a>
+                                </Link>
                             </li>
                         </ul>
                     </div>
                     <div className="card-body">
                         <div className="row mb-2">
                             <div className="col">
-                                <form action="{{ route('devices.index') }}" method="GET" id="form-search">
+                                <form
+                                    onSubmit={(e) => {
+                                        e.preventDefault();
+                                        // Call a function to handle search
+                                    }}
+                                    id="form-search"
+                                >
                                     <div className="row">
                                         <div className="col">
                                             <input
@@ -104,22 +123,28 @@ function DeviceList(props) {
                                                 className="form-control"
                                                 type="text"
                                                 placeholder="Tìm theo tên..."
+                                                value={searchName}
+                                                onChange={(e) => setSearchName(e.target.value)}
                                             />
                                         </div>
                                         <div className="col">
                                             <input
-                                                name="searchName"
+                                                name="searchQuantity"
                                                 className="form-control"
                                                 type="text"
-                                                placeholder="Tìm theo tên..."
+                                                placeholder="Tìm theo số lượng..."
+                                                value={searchQuantity}
+                                                onChange={(e) => setSearchQuantity(e.target.value)}
                                             />
                                         </div>
                                         <div className="col">
                                             <input
-                                                name="searchName"
+                                                name="searchDeviceType"
                                                 className="form-control"
                                                 type="text"
-                                                placeholder="Tìm theo tên..."
+                                                placeholder="Tìm theo loại thiết bị..."
+                                                value={searchDeviceType}
+                                                onChange={(e) => setSearchDeviceType(e.target.value)}
                                             />
                                         </div>
                                         <div className="col-lg-2">
@@ -133,7 +158,7 @@ function DeviceList(props) {
                         </div>
 
                         <div className="table-responsive">
-                            <table class="table">
+                            <table className="table">
                                 <thead>
                                     <tr>
                                         <th>STT</th>
@@ -143,7 +168,7 @@ function DeviceList(props) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {devices.map((device, index) => (
+                                    {filteredDevices.map((device, index) => (
                                         <tr key={device.id}>
                                             <td>{index + 1}</td>
                                             <td className="device-cell">
@@ -160,7 +185,7 @@ function DeviceList(props) {
                                             </td>
 
                                             <td>{device.quantity}</td>
-                                            <td>{device.device_type_id}</td>
+                                            <td>{device.device_type.name}</td>
                                             <td>
                                                 <button
                                                     onClick={() => handleAddToCart(device)}
@@ -173,6 +198,9 @@ function DeviceList(props) {
                                     ))}
                                 </tbody>
                             </table>
+                            <Link to="/cart" className="btn btn-primary float-right">
+                                Xem Giỏ Mượn
+                            </Link>
                         </div>
                     </div>
                 </div>
