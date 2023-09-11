@@ -2,16 +2,20 @@ import React, { useState } from 'react';
 import Blank from '../layouts/Blank';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
 function Login(props) {
+    const dispatch = useDispatch();
+
+  
     const navigate = useNavigate();
     const [account, setAccount] = useState({
         email: '',
         password: ''
     });
+
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            console.log(1);
             const response = await axios.post('http://127.0.0.1:8000/api/auth/login', account);
             console.log(response.data?.access_token);
             const { token } = response.data?.access_token;
@@ -28,6 +32,7 @@ function Login(props) {
             // alert('đăng nhập thành công!');
             // Điều hướng tới trang sau khi đăng nhập thành công
             navigate('/');
+
         } catch {
             alert('đăng nhập thất bại');
             navigate('/login');
