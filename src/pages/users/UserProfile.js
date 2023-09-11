@@ -5,21 +5,9 @@ import { useParams } from "react-router-dom";
 
 function UserProfile(props) {
 
-    const [users, setUsers] = useState([]);
-    const {id} = useParams();
-    const anh = "http://127.0.0.1:8000";
-  
-  
-    useEffect(() => {
-      UserModel.find(id)
-        .then((res) => {
-          setUsers(res);
-          console.log(res);
-        })
-        .catch((err) => {
-          throw err;
-        });
-    }, [id]);
+  const [acc, setAcc] = useState(JSON.parse(localStorage.getItem('user')));
+  console.log(acc);
+  const urlimage = 'http://127.0.0.1:8000';
 
   return (
     <LayoutMaster>
@@ -62,7 +50,8 @@ function UserProfile(props) {
                 <div className="card-body">
                   <div className="media mb-3">
                     <div className="user-avatar user-avatar-xl fileinput-button">
-                      <img src="" alt="" />
+                      <img src={urlimage + acc.image}/>
+                      
                     </div>
                     <div className="media-body pl-3">
                       <div
@@ -81,52 +70,52 @@ function UserProfile(props) {
                   <form method="post">
                     <div className="form-row">
                       <label htmlFor="input01" className="col-md-3">
-                        Tên giáo viên :
+                        Tên giáo viên : 
                       </label>
                       <div className="col-md-9 mb-3">
                         <div className="custom-file">
-                          <p />
+                         <p>{acc.name}</p>
                         </div>
                       </div>
                     </div>
                     <div className="form-row">
                       <label htmlFor="input02" className="col-md-3">
-                        E-mail :
+                        E-mail : 
                       </label>
                       <div className="col-md-9 mb-3">
-                        <p />
+                       <p>{acc.email}</p>
                       </div>
                     </div>
                     <div className="form-row">
                       <label htmlFor="input03" className="col-md-3">
-                        Số điện thoại :
+                        Số điện thoại : 
                       </label>
                       <div className="col-md-9 mb-3">
-                        <p />
+                        <p>{acc.phone}</p>
                       </div>
                     </div>
                     <div className="form-row">
                       <label htmlFor="input04" className="col-md-3">
-                        Địa chỉ :
+                        Địa chỉ : 
                       </label>
                       <div className="col-md-9 mb-3">
-                        <p />
+                        <p>{acc.address}</p>
                       </div>
                     </div>
                     <div className="form-row">
                       <label htmlFor="input04" className="col-md-3">
-                        Giới tính :
+                        Giới tính : 
                       </label>
                       <div className="col-md-9 mb-3">
-                        <p />
+                        <p>{acc.gender}</p>
                       </div>
                     </div>
                     <div className="form-row">
                       <label htmlFor="input04" className="col-md-3">
-                        Ngày sinh :
+                        Ngày sinh : 
                       </label>
                       <div className="col-md-9 mb-3">
-                        <p>ngay</p>
+                        <p>{acc.birthday}</p>
                       </div>
                     </div>
                     <div className="form-row">
@@ -134,7 +123,7 @@ function UserProfile(props) {
                         Chức vụ :
                       </label>
                       <div className="col-md-9 mb-3">
-                        <p>tên</p>
+                        <p>{acc.group_id}</p>
                       </div>
                     </div>
                     <div className="form-row">
@@ -142,7 +131,7 @@ function UserProfile(props) {
                         Tổ :
                       </label>
                       <div className="col-md-9 mb-3">
-                        <p>tổ</p>
+                        <p>{acc.nest_id}</p>
                       </div>
                     </div>
                     <hr />
