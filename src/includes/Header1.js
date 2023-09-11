@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Sidebar from "./Sidebar";
 function Header(props) {
   const [acc, setAcc] = useState(JSON.parse(localStorage.getItem('user')));
   const navigate = useNavigate();
+  const { id } = useParams();
   const LogOut = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('jwtToken');
@@ -570,10 +571,10 @@ function Header(props) {
                       {" "}
                       Beni Arisandi{" "}
                     </h6>
-                    <a className="dropdown-item" href="user-profile.html">
-                      <span className="dropdown-icon oi oi-person" /> Profile
-                    </a>{" "}
-                    <Link to={'login'} onClick={LogOut} className="dropdown-item" href="auth-signin-v1.html">
+                    <Link className="dropdown-item" to={"/users/profile"}>
+                      <span className="dropdown-icon oi oi-person" /> Thông tin
+                    </Link>{" "}
+                    <Link to={'/login'} onClick={LogOut} className="dropdown-item" href="auth-signin-v1.html">
                       <span className="dropdown-icon oi oi-account-logout" />{" "}
                       Đăng xuất
                     </Link>
