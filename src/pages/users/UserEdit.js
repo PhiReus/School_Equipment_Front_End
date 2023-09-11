@@ -7,6 +7,7 @@ import LayoutMaster from "../../layouts/LayoutMaster";
 import axios from "axios";
 import GroupModel from "../../models/GroupModel";
 import NestModel from "../../models/NestModel";
+import Swal from "sweetalert2";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Không được để trống !"),
@@ -31,25 +32,29 @@ function UserEdit(props) {
     group_id: "",
     nest_id: "",
     password: "",
-    image:""
+    image: "",
   });
-  const { id } = useParams();
   const [groups, setGroups] = useState([]);
   const [nests, setNests] = useState([]);
   const [image, setImage] = useState(null);
+  // const [password, setPassword] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const anh = "http://127.0.0.1:8000";
+  const [acc1, setAcc1] = useState(JSON.parse(localStorage.getItem("user")));
 
   useEffect(() => {
-    UserModel.find(id)
+    // console.log(acc1.id);
+    UserModel.find(acc1.id)
       .then((res) => {
         setForm(res.data);
         setImagePreview(res.data.image);
+        // setPassword(res.data.password);
+        // console.log(res.data.password);
       })
       .catch((err) => {
         console.error(err);
       });
-  }, [id]);
+  }, [acc1]);
 
   useEffect(() => {
     GroupModel.all()
@@ -75,37 +80,42 @@ function UserEdit(props) {
   };
 
   const handleSubmit = (data) => {
-    const formData = new FormData();
-    const inputElement = document.getElementById('fileInput');
-  // Lấy đối tượng File từ input
-    const file = inputElement.files[0];
-    formData.append('image', file);
-    formData.append("name", data.name);
-    formData.append("email", data.email);
-    formData.append("address", data.address);
-    formData.append("phone", data.phone);
-    formData.append("gender", data.gender);
-    formData.append("birthday", data.birthday);
-    formData.append("group_id", data.group_id);
-    formData.append("nest_id", data.nest_id);
-    formData.append("password", data.password);
+    // const requestData = {
+    //   name: data.name,
+    //   email: data.email,
+    //   address: data.address,
+    //   phone: data.phone,
+    //   gender: data.gender,
+    //   birthday: data.birthday,
+    //   group_id: data.group_id,
+    //   nest_id: data.nest_id,
+    // };
+    // if (data.password !== "") {
+    //   requestData.password = data.password; // Sử dụng mật khẩu mới nếu có
+    // } else {
+    //   requestData.password = password; // Sử dụng mật khẩu cũ nếu không
+    // }
 
-    
-    UserModel.update(id, data)
+    UserModel.update(acc1.id, data)
       .then((res) => {
+        Swal.fire({
+          icon: "success",
+          title: "Cập nhật thành công!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
         console.log(res);
-        navigate("/");
+        navigate("/users/profile");
       })
       .catch((err) => {
         console.error("Lỗi khi sửa :", err);
       });
-    
   };
   // console.log(form);
   return (
     <LayoutMaster>
       <header className="page-title-bar">
-        <h1 className="page-title"> Chỉnh Sửa Thông Tin Giáo Viên </h1>
+        <h1 className="page-title"> Chỉnh Sửa Thông Tin </h1>
       </header>
       <Formik
         initialValues={form}
@@ -239,15 +249,13 @@ function UserEdit(props) {
                 <div className="form-group">
                   <label htmlFor="tf1">Mật khẩu</label>{" "}
                   <Field
-                    type="text"
+                    type="password" // Sử dụng type="password" để ẩn mật khẩu
                     name="password"
                     className="form-control"
                     placeholder="Để trống nếu không thay đổi"
+                    autoComplete="new-password"
                   />
                   <small className="form-text text-muted" />
-                  {errors.password && touched.password ? (
-                    <div>{errors.password}</div>
-                  ) : null}
                 </div>
                 <div className="form-group">
                   <label htmlFor="tf1">Hình ảnh</label>{" "}
@@ -271,7 +279,10 @@ function UserEdit(props) {
                   />
                 )}
                 <div className="form-actions">
-                  <Link className="btn btn-secondary float-right" to="/">
+                  <Link
+                    className="btn btn-secondary float-right"
+                    to={"/users/profile"}
+                  >
                     Hủy
                   </Link>
                   <button className="btn btn-primary ml-auto" type="submit">
