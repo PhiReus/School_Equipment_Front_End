@@ -5,7 +5,6 @@ import { Route, Routes } from 'react-router-dom';
 import LayoutMaster from './layouts/LayoutMaster';
 import Borrow from './pages/Borrow';
 import Device from './pages/DeviceList';
-import Borrow from './pages/borrows/Borrow';
 import BorrowCreate from './pages/borrows/BorrowCreate';
 import Login from './includes/Login';
 import ForgotPassword from './includes/ForgotPassword';

@@ -571,7 +571,7 @@ function Header(props) {
                       {" "}
                       Beni Arisandi{" "}
                     </h6>
-                    <Link className="dropdown-item" to={"/users/28"}>
+                    <Link className="dropdown-item" to={"/users/" + acc.id}>
                       <span className="dropdown-icon oi oi-person" /> Thông tin
                     </Link>{" "}
                     <Link to={'login'} onClick={LogOut} className="dropdown-item" href="auth-signin-v1.html">
