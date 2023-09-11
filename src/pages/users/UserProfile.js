@@ -1,13 +1,57 @@
 import React, { useEffect, useState } from "react";
 import LayoutMaster from "../../layouts/LayoutMaster";
 import UserModel from "../../models/UserModel";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import GroupModel from "../../models/GroupModel";
+import NestModel from "../../models/NestModel";
 
 function UserProfile(props) {
-
-  const [acc, setAcc] = useState(JSON.parse(localStorage.getItem('user')));
-  console.log(acc);
+  const [acc1, setAcc1] = useState(JSON.parse(localStorage.getItem('user')));
+  
+  const [acc, setAcc] = useState({});
+  useEffect(() => {
+    UserModel.find(acc1.id)
+      .then((res) => {
+        const data = res.data; // Truy cập dữ liệu từ kết quả
+        setAcc(data); // Đặt giá trị của acc bằng dữ liệu
+      })
+      .catch((error) => {
+        console.error(error); // Xử lý lỗi nếu có
+      });
+  }, []);
+  
+  // console.log(acc);
   const urlimage = 'http://127.0.0.1:8000';
+  const [groups, setGroups] = useState([]);
+  const [nests, setNests] = useState([]);
+  const getGroupNameById = (groupId) => {
+    const group = groups.find((group) => group.id === groupId);
+    return group ? group.name : "";
+  };
+  
+  const getNestNameById = (nestId) => {
+    const nest = nests.find((nest) => nest.id === nestId);
+    return nest ? nest.name : "";
+  };
+
+  useEffect(() => {
+    GroupModel.all()
+      .then((res) => {
+        setGroups(res);
+        // console.log(res);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    NestModel.all()
+      .then((res) => {
+        setNests(res);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
+  
 
   return (
     <LayoutMaster>
@@ -16,16 +60,12 @@ function UserProfile(props) {
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb">
               <li className="breadcrumb-item active">
-                <a href="#">
-                  <i className="breadcrumb-icon fa fa-angle-left mr-2" />
-                  Trang Chủ
-                </a>
               </li>
             </ol>
           </nav>
           <div className="d-md-flex align-items-md-start">
             <h1 className="page-title mr-sm-auto">
-              Xem thông tin chi tiết giáo viên :{" "}
+              Xem thông tin chi tiết :{" "}
             </h1>
           </div>
         </header>
@@ -35,12 +75,11 @@ function UserProfile(props) {
               <div className="card card-fluid">
                 <h6 className="card-header"> Chi tiết </h6>
                 <nav className="nav nav-tabs flex-column border-0">
-                  <a href="" className="nav-link active">
+                  <Link href="" className="nav-link">
                     Chi tiết giáo viên
-                  </a>
-                  <a href="" className="nav-link">
-                    Lịch sử mượn
-                  </a>
+                  </Link>
+                  <Link to="/users/update-profile" className="nav-link">Chỉnh sửa giáo viên</Link>
+                    
                 </nav>
               </div>
             </div>
@@ -51,7 +90,6 @@ function UserProfile(props) {
                   <div className="media mb-3">
                     <div className="user-avatar user-avatar-xl fileinput-button">
                       <img src={urlimage + acc.image}/>
-                      
                     </div>
                     <div className="media-body pl-3">
                       <div
@@ -123,7 +161,7 @@ function UserProfile(props) {
                         Chức vụ :
                       </label>
                       <div className="col-md-9 mb-3">
-                        <p>{acc.group_id}</p>
+                        <p>{getGroupNameById(acc.group_id)}</p>
                       </div>
                     </div>
                     <div className="form-row">
@@ -131,18 +169,10 @@ function UserProfile(props) {
                         Tổ :
                       </label>
                       <div className="col-md-9 mb-3">
-                        <p>{acc.nest_id}</p>
+                        <p>{getNestNameById(acc.nest_id)}</p>
                       </div>
                     </div>
                     <hr />
-                    <div className="form-actions">
-                      <a
-                        className="btn btn-dark"
-                        href="{{ route('users.index') }}"
-                      >
-                        <i className="fa fa-arrow-left mr-2" /> Quay lại
-                      </a>
-                    </div>
                   </form>
                 </div>
               </div>

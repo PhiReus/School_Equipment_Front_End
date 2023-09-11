@@ -31,7 +31,9 @@ function Login(props) {
             // });
             // alert('đăng nhập thành công!');
             // Điều hướng tới trang sau khi đăng nhập thành công
+
             navigate('/Devices');
+
 
         } catch {
             alert('đăng nhập thất bại');

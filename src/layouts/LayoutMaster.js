@@ -10,7 +10,7 @@ function LayoutMaster({ children }) {
         <main className="app-main">
           <div className="wrapper">
             <div className="page">
-              <div class="page-inner">               
+              <div className="page-inner">               
                 <div className="page-section">
                   <div className="section-block">
                     {children}
