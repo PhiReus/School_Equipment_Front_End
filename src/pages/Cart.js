@@ -17,12 +17,12 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 const imageBaseUrl = 'http://127.0.0.1:8000'; // Đường dẫn cơ sở cho ảnh
 
 const SignupSchema = Yup.object().shape({
-    borrow_date: Yup.string().required('Required'),
+    borrow_date: Yup.string().required('Vui lòng nhập ngày mượn!'),
 });
 
 function Cart(props) {
     const navigate = useNavigate();
-    
+
     const [data, setData] = useState([]);
     const [formData, setFormData] = useState({
         borrow_date: '',
@@ -33,21 +33,21 @@ function Cart(props) {
             lesson_name: [],
             quantity: [],
             session: [],
-            lecture_name:  [],
-            room_id:  [],
-            lecture_number:  [],
-            return_date:  [],
+            lecture_name: [],
+            room_id: [],
+            lecture_number: [],
+            return_date: [],
         }
     });
     const dispatch = useDispatch();
-    
+
     const [rooms, setRooms] = useState([]);
     const [createdAt, setCreatedAt] = useState('');
 
     const user = JSON.parse(localStorage.getItem('user')); // Lấy thông tin người dùng từ local storage
     const [userData, setUserData] = useState(user);
     useEffect(() => {
-       
+
         // Lấy ngày hiện tại và định dạng thành chuỗi yyyy-MM-ddTHH:mm để điền vào trường "Ngày tạo phiếu"
         const currentDate = new Date();
         const formattedDate = format(currentDate, "yyyy-MM-dd'T'HH:mm");
@@ -62,7 +62,7 @@ function Cart(props) {
             });
     }, []);
     useEffect(() => {
-        
+
 
         // Set gia tri cho cart
         const cartData = JSON.parse(localStorage.getItem('cart')) || [];
@@ -102,10 +102,10 @@ function Cart(props) {
         }
 
         console.log(userData);
-        setFormData({ 
-            ...formData, 
-            devices: new_devices, 
-            user_id: userData.id 
+        setFormData({
+            ...formData,
+            devices: new_devices,
+            user_id: userData.id
         });
     }, []);
 
@@ -118,27 +118,37 @@ function Cart(props) {
             type: SET_CART,
             payload: newData,
         });
+        setData(newData);
     };
 
 
-    const handleSubmit = async (values) => {
+    const handleSubmit = async (values, { resetForm }) => {
         try {
-          const borrowModel = new BorrowModel();
-          const response = await borrowModel.createBorrow(values);
-      
-          if (response.status === 201) {
-            console.log('Borrow record created successfully:', response.data);
-            localStorage.removeItem('cart');
-            dispatch({ type: SET_CART, payload: [] });
-            navigate('/borrows');
-          } else {
-            console.error('Error creating borrow record.');
-          }
+            const borrowModel = new BorrowModel();
+            const response = await borrowModel.createBorrow(values);
+
+            if (response) {
+                console.log('Borrow record created successfully:', response.data);
+                localStorage.removeItem('cart');
+                dispatch({ type: SET_CART, payload: [] });
+
+                // Show a success message in Vietnamese
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công!',
+                    text: 'Tạo phiếu mượn thành công!',
+                });
+
+                resetForm(); // Clear the form fields if needed
+                navigate('/borrows'); // Navigate to the 'borrows' page
+            } else {
+                console.error('Error creating borrow record.');
+            }
         } catch (error) {
-          console.error('An error occurred:', error);
+            console.error('An error occurred:', error);
         }
-      };
-      
+    };
+
 
     return (
         <LayoutMaster>
@@ -147,10 +157,10 @@ function Cart(props) {
                 <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item active">
-                            <a href="{{ route('devices.index') }}">
+                            <Link to="/">
                                 <i className="breadcrumb-icon fa fa-angle-left mr-2" />
                                 Trang Chủ
-                            </a>
+                            </Link>
                         </li>
                     </ol>
                 </nav>
@@ -193,8 +203,9 @@ function Cart(props) {
                                                 placeholder="Nhập ngày mượn"
                                             />
                                             {errors.borrow_date && touched.borrow_date ? (
-                                                <div className="text-danger">{errors.borrow_date}</div>
+                                                <div style={{ color: 'red' }}>{errors.borrow_date}</div>
                                             ) : null}
+
                                         </div>
                                     </div>
                                 </div>
@@ -213,16 +224,8 @@ function Cart(props) {
                         </div>
                         <div className="page-section">
                             <div className="card card-fluid">
-                                <div className="card-header">
-                                    <ul className="nav nav-tabs card-header-tabs">
-                                        <li className="nav-item">
-                                            <a className="nav-link active " href="{{ route('devices.index') }}">
-                                                Chi tiết phiếu mượn
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
                                 <div className="card-body">
+                            <legend>Chi tiết phiếu mượn</legend>
                                     <div className="row mb-2">
                                         <div className="col"></div>
                                     </div>
@@ -251,7 +254,7 @@ function Cart(props) {
                                                         <td>{index + 1}</td>
                                                         <td className="device-cell">
                                                             <div className="device-info">
-                                                            <Field type="hidden" name={`devices[id][${index}]`} value={item.device_id} />
+                                                                <Field type="hidden" name={`devices[id][${index}]`} value={item.device_id} />
                                                                 <Link to={`/borrows/${item.device_id}`} className="tile tile-img mr-1">
                                                                     <img
                                                                         className="img-fluid"

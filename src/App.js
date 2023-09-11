@@ -5,7 +5,6 @@ import { Route, Routes } from 'react-router-dom';
 import LayoutMaster from './layouts/LayoutMaster';
 import Borrow from './pages/Borrow';
 import Cart from './pages/Cart';
-import BorrowCreate from './pages/borrows/BorrowCreate';
 import Device from './pages/DeviceList';
 import Login from './includes/Login';
 import ForgotPassword from './includes/ForgotPassword';
@@ -15,7 +14,6 @@ function App() {
   return (
     <>
       <Routes>
-      <Route path="/Borrow/create" element={<BorrowCreate/>}></Route>
       <Route path="/Borrows" element={<Borrow/>}></Route>
       <Route path="/Cart" element={<Cart/>}></Route>
       <Route path="/Devices" element={<Device/>}></Route>
