@@ -100,7 +100,7 @@ function DeviceList(props) {
                     <div className="card-header">
                         <ul className="nav nav-tabs card-header-tabs">
                             <li className="nav-item">
-                                <Link className="nav-link active" to="/devices">
+                                <Link className="nav-link active" to="/">
                                     Tất Cả
                                 </Link>
                             </li>
@@ -176,7 +176,7 @@ function DeviceList(props) {
                                                     <Link to={`/borrows/${device.id}`} className="tile tile-img mr-1">
                                                         <img
                                                             className="img-fluid"
-                                                            src={imageBaseUrl + device.image}
+                                                            src={device.image_url}
                                                             alt={device.name}
                                                         />
                                                     </Link>
