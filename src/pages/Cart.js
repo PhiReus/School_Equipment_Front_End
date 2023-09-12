@@ -22,7 +22,7 @@ const SignupSchema = Yup.object().shape({
 
 function Cart(props) {
     const navigate = useNavigate();
-
+    const [acc1, setAcc1] = useState(JSON.parse(localStorage.getItem('user')));
     const [data, setData] = useState([]);
     const [formData, setFormData] = useState({
         borrow_date: '',
@@ -61,9 +61,10 @@ function Cart(props) {
                 console.error('Error fetching rooms:', error);
             });
     }, []);
+    
     useEffect(() => {
 
-
+        
         // Set gia tri cho cart
         const cartData = JSON.parse(localStorage.getItem('cart')) || [];
         setData(cartData);
@@ -109,6 +110,8 @@ function Cart(props) {
     }, []);
   // Set gia tri mac dinh cho lesson_name va quantity
        
+    if (acc1 !== null){
+
 
     const handleRemove = (index) => {
         const newData = [...data];
@@ -148,7 +151,6 @@ function Cart(props) {
             console.error('An error occurred:', error);
         }
     };
-
 
     return (
         <LayoutMaster>
@@ -369,6 +371,9 @@ function Cart(props) {
             </Formik>
         </LayoutMaster>
     );
+    }else {
+        navigate('/login');
+    }
 }
 
 export default Cart;
