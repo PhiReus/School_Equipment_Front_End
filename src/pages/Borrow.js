@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import LayoutMaster from '../layouts/LayoutMaster';
 import BorrowModel from '../models/BorrowModel';
 import { format } from 'date-fns';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons'; // Import arrow icons
 
 function Borrow(props) {
+    const navigate = useNavigate();
+    const [acc1, setAcc1] = useState(JSON.parse(localStorage.getItem('user')));
     const [borrows, setBorrows] = useState([]);
     const [searchCreatedDate, setSearchCreatedDate] = useState('');
     const [searchBorrowDate, setSearchBorrowDate] = useState('');
@@ -15,9 +17,9 @@ function Borrow(props) {
     const [searchApproved, setSearchApproved] = useState('');
     const [totalReturned, setTotalReturned] = useState(0);
     const [totalBorrowed, setTotalBorrowed] = useState(0);
-
+    
     const user = JSON.parse(localStorage.getItem('user'));
-
+    
     useEffect(() => {
         const borrowModel = new BorrowModel();
         async function fetchData() {
@@ -30,14 +32,15 @@ function Borrow(props) {
         }
         fetchData();
     }, []);
-
+    
     // Pagination state
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(20); // Number of items to display per page
     // Calculate the index range for the current page
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-
+    
+    if (acc1 !== null){
     // Chuyển đổi ngày tháng sang định dạng dễ đọc
     function formatDateString(dateString) {
         const formattedDate = format(new Date(dateString), 'dd/MM/yyyy HH:mm:ss'); // Định dạng theo ý muốn của bạn
@@ -80,7 +83,7 @@ function Borrow(props) {
     };
 
   
-
+    
     return (
         <LayoutMaster>
             <header className="page-title-bar">
@@ -231,5 +234,8 @@ function Borrow(props) {
             </div>
         </LayoutMaster>
     );
+    }else {
+        navigate('/login')
+    }
 }
 export default Borrow;

@@ -10,6 +10,12 @@ class AuthModel {
     return res;
   }
 
+  async fogotpassword(email) {
+    // console.log(credentials);
+    const res = await axios.post(this.api_url + "forgot_password", email );
+    return res;
+  }
+
   async logout() {
     try {
       let token = localStorage.getItem("token");

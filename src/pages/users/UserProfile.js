@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import LayoutMaster from "../../layouts/LayoutMaster";
 import UserModel from "../../models/UserModel";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import GroupModel from "../../models/GroupModel";
 import NestModel from "../../models/NestModel";
 
 function UserProfile(props) {
   const [acc1, setAcc1] = useState(JSON.parse(localStorage.getItem('user')));
-  
+  const navigate = useNavigate();
   const [acc, setAcc] = useState({});
   useEffect(() => {
     UserModel.find(acc1.id)
@@ -50,8 +50,7 @@ function UserProfile(props) {
         console.error(err);
       });
   }, []);
-  
-
+  if (acc1 !== null){
   return (
     <LayoutMaster>
       <>
@@ -181,6 +180,9 @@ function UserProfile(props) {
       </>
     </LayoutMaster>
   );
+  }else {
+    navigate('/login')
+  }
 }
 
 export default UserProfile;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Blank from '../layouts/Blank';
+import Blank from '../../layouts/Blank';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import AuthModel from '../../models/AuthModel';
 
 function ForgotPassword(props) {
     const [email, setEmail] = useState({
@@ -11,9 +11,16 @@ function ForgotPassword(props) {
 
     const handleForgot = async (e) => {
         e.preventDefault();
+        
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/auth/forgot_password', { email: email.email });
-            alert('Mật Khẩu mới đã được gửi vào email!');
+            AuthModel.fogotpassword({ email: email.email })
+            .then((res) => {
+                alert('Mật Khẩu mới đã được gửi vào email!');
+            })
+            .catch((error) => {
+                alert('thất bại');
+            });
+           
         } catch {
             alert('thất bại');
         }
