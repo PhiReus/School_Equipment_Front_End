@@ -2,7 +2,7 @@ import UserEdit from "./pages/users/UserEdit";
 import Cart from "./pages/Cart";
 import { Route, Routes } from "react-router-dom";
 import Borrow from "./pages/Borrow";
-import Login from "./includes/Login";
+import Login from "./pages/auth/Login";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import UserProfile from "./pages/users/UserProfile";
 import DeviceList from "./pages/DeviceList";

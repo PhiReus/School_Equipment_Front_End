@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Sidebar from "./Sidebar";
-import { IconName, IoEnterOutline, IoPerson } from "react-icons/io5";
 import UserModel from "../models/UserModel";
 function Header(props) {
   const [acc, setAcc] = useState(JSON.parse(localStorage.getItem('user')));
@@ -173,10 +172,10 @@ function Header(props) {
                       Beni Arisandi{" "}
                     </h6>
                     <Link className="dropdown-item" to={"/users/profile"}>
-                      <span className="dropdown-icon oi oi-person" /> Thông tin
+                    <span class="dropdown-icon oi oi-person"></span> Thông tin
                     </Link>{" "}
                     <Link to={'/login'} onClick={LogOut} className="dropdown-item" href="auth-signin-v1.html">
-                      <span className="dropdown-icon oi oi-account-logout" />{" "}
+                    <span class="dropdown-icon oi oi-account-logout"></span>{" "}
                       Đăng xuất
                     </Link>
                     <div className="dropdown-divider" />
