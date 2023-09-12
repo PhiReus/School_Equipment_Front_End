@@ -1,46 +1,63 @@
 import React, { useState } from "react";
 import Blank from "../layouts/Blank";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
 import AuthModel from "../models/AuthModel";
 import Swal from "sweetalert2";
+
 function Login(props) {
-  const SignupSchema = Yup.object().shape({
+  const validationSchema = Yup.object().shape({
     email: Yup.string().required("Vui lòng nhập email !"),
     password: Yup.string().required("Vui lòng nhập mật khẩu !"),
   });
 
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [account, setAccount] = useState({
     email: "",
     password: "",
   });
+  const [errors, setErrors] = useState({});
+
   const handleLogin = (e) => {
     e.preventDefault();
-    AuthModel.login(account)
-      .then((res) => {
-        // console.log("API Response:", res);
-        const { access_token } = res.data;
-        setAccount(res.data);
-        // Lưu JWT vào bộ nhớ trình duyệt
-        localStorage.setItem("jwtToken", access_token);
-        const { user } = res.data;
 
-        // Lưu thông tin người dùng vào localStorage
-        localStorage.setItem("user", JSON.stringify(user));
-        navigate("/Devices");
-        handleLoginSuccess();
+    validationSchema
+      .validate(account, { abortEarly: false })
+      .then(() => {
+        // Validation passed, proceed with login
+        AuthModel.login(account)
+          .then((res) => {
+            const { access_token } = res.data;
+            setAccount(res.data);
+            // Lưu JWT vào bộ nhớ trình duyệt
+            localStorage.setItem("jwtToken", access_token);
+            const { user } = res.data;
+
+            // Lưu thông tin người dùng vào localStorage
+            localStorage.setItem("user", JSON.stringify(user));
+            navigate("/Devices");
+            handleLoginSuccess();
+          })
+          .catch((error) => {
+            Swal.fire({
+              icon: "error",
+              title: "Có lổi xảy ra",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            navigate("/login");
+          });
       })
-      .catch((error) => {
-        alert("đăng nhập thất bại");
-        console.log(error);
-
-        navigate("/login");
+      .catch((validationErrors) => {
+        // Validation failed, set error messages
+        const errors = {};
+        validationErrors.inner.forEach((error) => {
+          errors[error.path] = error.message;
+        });
+        setErrors(errors);
       });
   };
+
   const handleLoginSuccess = () => {
     Swal.fire({
       icon: "success",
@@ -53,6 +70,7 @@ function Login(props) {
   const handleOnChange = (e) => {
     setAccount({ ...account, [e.target.name]: e.target.value });
   };
+
   return (
     <Blank>
       <form className="auth-form" onSubmit={handleLogin}>
@@ -62,14 +80,17 @@ function Login(props) {
             <input
               type="text"
               id="email"
-              className="form-control"
+              className={`form-control ${errors.email ? "is-invalid" : ""}`}
               placeholder="Email"
-              autofocus=""
+              autoFocus=""
               name="email"
               value={account.email}
               onChange={handleOnChange}
             />{" "}
-            <label htmlFor="inputUser">Email</label>
+            <label htmlFor="inputEmail">Email</label>
+            {errors.email ? (
+              <div className="invalid-feedback">{errors.email}</div>
+            ) : null}
           </div>
         </div>
         {/* /.form-group */}
@@ -79,13 +100,16 @@ function Login(props) {
             <input
               type="password"
               id="password"
-              className="form-control"
+              className={`form-control ${errors.password ? "is-invalid" : ""}`}
               placeholder="Mật khẩu"
               name="password"
               value={account.password}
               onChange={handleOnChange}
             />{" "}
             <label htmlFor="inputPassword">Mật khẩu</label>
+            {errors.password ? (
+              <div className="invalid-feedback">{errors.password}</div>
+            ) : null}
           </div>
         </div>
         {/* /.form-group */}
@@ -121,5 +145,4 @@ function Login(props) {
     </Blank>
   );
 }
-
 export default Login;
