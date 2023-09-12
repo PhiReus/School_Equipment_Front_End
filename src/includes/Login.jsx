@@ -18,7 +18,6 @@ function Login(props) {
     email: "",
     password: "",
   });
-
   const handleLogin = (e) => {
     e.preventDefault();
     AuthModel.login(account)
@@ -26,7 +25,6 @@ function Login(props) {
         // console.log("API Response:", res);
         const { access_token } = res.data;
         setAccount(res.data);
-
         // Lưu JWT vào bộ nhớ trình duyệt
         localStorage.setItem("jwtToken", access_token);
         const { user } = res.data;
