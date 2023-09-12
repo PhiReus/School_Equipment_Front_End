@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import LayoutMaster from '../layouts/LayoutMaster';
 import DeviceModel from '../models/DeviceModel';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,6 +19,8 @@ function DeviceList(props) {
     const [searchDeviceType, setSearchDeviceType] = useState('');
     const cart = useSelector((state) => state.cart);
     const dispatch = useDispatch();
+    const [acc1, setAcc1] = useState(JSON.parse(localStorage.getItem('user')));
+    const navigate = useNavigate();
 
     useEffect(() => {
         const deviceModel = new DeviceModel();
@@ -43,6 +45,7 @@ function DeviceList(props) {
 
         fetchData();
     }, []);
+    if (acc1 !== null){
 
     const handleAddToCart = (device) => {
         const existingItemIndex = cart.findIndex(item => item.device_id === device.id);
@@ -207,6 +210,9 @@ function DeviceList(props) {
             </div>
         </LayoutMaster>
     );
+    }else {
+        navigate('/login');
+    }
 }
 
 export default DeviceList;
