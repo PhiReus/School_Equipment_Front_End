@@ -21,7 +21,6 @@ function UserProfile(props) {
   }, []);
   
   // console.log(acc);
-  const urlimage = 'http://127.0.0.1:8000';
   const [groups, setGroups] = useState([]);
   const [nests, setNests] = useState([]);
   const getGroupNameById = (groupId) => {
@@ -89,7 +88,7 @@ function UserProfile(props) {
                 <div className="card-body">
                   <div className="media mb-3">
                     <div className="user-avatar user-avatar-xl fileinput-button">
-                      <img src={urlimage + acc.image}/>
+                      <img src={acc.url_image}/>
                     </div>
                     <div className="media-body pl-3">
                       <div
