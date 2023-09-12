@@ -1,5 +1,4 @@
 import React from "react";
-import { IconName, IoBookSharp, IoCalendarClearOutline, IoGridSharp, IoHammerSharp, IoHome, IoHomeOutline, IoLayersOutline, IoPeopleCircleOutline, IoPeopleSharp } from "react-icons/io5";
 import { Link } from "react-router-dom";
 function Sidebar(props) {
   return (
@@ -12,7 +11,7 @@ function Sidebar(props) {
             {/* .menu-item */}
             <li className="menu-item">
               <Link to={'/'} className="menu-link">
-                <IoHome />
+              <span class="menu-icon fas fa-home"></span>
                 <span className="menu-text">Trang chủ</span>
               </Link>
             </li>
@@ -25,7 +24,7 @@ function Sidebar(props) {
             {/* .menu-item */}
             <li className="menu-item has-child">
               <a href="#" className="menu-link">
-                <IoPeopleSharp/>{"    "}
+              <span class="menu-icon"><i class="fas fa-users"></i></span>
                   
                 <span className="menu-text">Giáo Viên</span>
               </a>{" "}
@@ -43,7 +42,7 @@ function Sidebar(props) {
             {/* .menu-item */}
             <li className="menu-item has-child">
               <a href="#" className="menu-link">
-                <IoHammerSharp />{"    "}
+              <span class="menu-icon oi oi-browser"></span>
                 <span className="menu-text">Thiết Bị</span>{" "}
               </a>
               {/* child menu */}
@@ -63,7 +62,7 @@ function Sidebar(props) {
               <a href="#" className="menu-link">
                 {" "}
                 
-                  <IoBookSharp />{"    "}
+                <span class="menu-icon"><i class="fas fa-book"></i></span>
                 
                 <span className="menu-text">Phiếu Mượn</span>
               </a>{" "}
@@ -79,7 +78,7 @@ function Sidebar(props) {
             </li>
             <li className="menu-item has-child">
               <a href="#" className="menu-link">
-                <IoGridSharp />{"    "}
+              <span class="menu-icon"><i class="fas fa-book"></i></span>
                 <span className="menu-text">Cart</span>
               </a>{" "}
               {/* child menu */}

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import Blank from "../layouts/Blank";
+import Blank from "../../layouts/Blank";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
-import AuthModel from "../models/AuthModel";
+import AuthModel from "../../models/AuthModel";
 import Swal from "sweetalert2";
 
 function Login(props) {
