@@ -1,32 +1,79 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Blank from '../../layouts/Blank';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthModel from '../../models/AuthModel';
+import Swal from "sweetalert2";
+import UserModel from '../../models/UserModel';
+import { array } from 'yup';
 
 function ForgotPassword(props) {
     const [email, setEmail] = useState({
-        email : ''
+        email: ''
     });
+    const [users,setUsers] = useState([]);
     const navigate = useNavigate();
+    const [isProcessing, setIsProcessing] = useState(false); // Thêm biến trạng thái isProcessing
+    const handleForgotSuccess = () => {
+        Swal.fire({
+            icon: "success",
+            title: "Mật Khẩu mới đã được gửi vào email!",
+            showConfirmButton: false,
+            timer: 3000,
+        });
+    };
+    const arrayEmails = [];
+    useEffect(()=>{
+        UserModel.all()
+            .then((res) => {
+                setUsers(res);
+            })
+
+    },[]);
+    users.forEach((user) => {
+        arrayEmails.push(user.email);
+    });
 
     const handleForgot = async (e) => {
         e.preventDefault();
-        
-        try {
-            AuthModel.fogotpassword({ email: email.email })
-            .then((res) => {
-                alert('Mật Khẩu mới đã được gửi vào email!');
-            })
-            .catch((error) => {
-                alert('thất bại');
-            });
-           
-        } catch {
-            alert('thất bại');
+        setIsProcessing(true); // Bắt đầu xử lý, đặt giá trị isProcessing thành true
+        const isFound = arrayEmails.includes(email.email);
+        if(isFound){
+            try {
+              AuthModel.fogotpassword({ email: email.email })
+                .then((res) => {
+                  handleForgotSuccess();
+                })
+                .catch((error) => {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'thất bại!',
+                    showConfirmButton: false,
+                    timer: 3000,
+                  });
+                })
+                .finally(() => {
+                  setIsProcessing(false); // Kết thúc xử lý, đặt giá trị isProcessing thành false
+                });
+            } catch {
+              Swal.fire({
+                icon: 'error',
+                title: 'thất bại!',
+                showConfirmButton: false,
+                timer: 3000,
+              });
+            }
+        }else{
+            setIsProcessing(false);
+            Swal.fire({
+                icon: 'error',
+                title: 'Nhập sai email!',
+                showConfirmButton: false,
+                timer: 3000,
+              });
         }
-    }
+    };
     const handleOnChange = (e) => {
-        setEmail({...email,[e.target.name]:e.target.value});
+        setEmail({ ...email, [e.target.name]: e.target.value });
     }
 
     return (
@@ -69,9 +116,13 @@ function ForgotPassword(props) {
                 {/* /.form-group */}
                 {/* actions */}
                 <div className="d-block d-md-inline-block mb-2">
-                    <button className="btn btn-lg btn-block btn-primary" type="submit">
-                        Đặt Lại Mật Khẩu
-                    </button>
+                    {isProcessing ? ( // Sử dụng kiểm tra isProcessing để điều khiển hiển thị của nút và dòng chữ
+                        <p>Vui lòng chờ!</p>
+                    ) : (
+                        <button className="btn btn-lg btn-block btn-primary" type="submit">
+                            Đặt Lại Mật Khẩu
+                        </button>
+                    )}
                 </div>
                 <div className="d-block d-md-inline-block">
                     <Link to={'/login'} className="btn btn-block btn-light">

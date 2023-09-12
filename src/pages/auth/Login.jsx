@@ -122,16 +122,6 @@ function Login(props) {
         {/* /.form-group */}
         {/* .form-group */}
         <div className="form-group text-center">
-          <div className="custom-control custom-control-inline custom-checkbox">
-            <input
-              type="checkbox"
-              className="custom-control-input"
-              id="remember-me"
-            />{" "}
-            <label className="custom-control-label" htmlFor="remember-me">
-              Ghi nhớ mật khẩu
-            </label>
-          </div>
         </div>
         {/* /.form-group */}
         {/* recovery links */}
