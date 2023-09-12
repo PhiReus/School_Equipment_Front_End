@@ -39,7 +39,7 @@ function UserEdit(props) {
   const [image, setImage] = useState(null);
   // const [password, setPassword] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
-  const anh = "http://127.0.0.1:8000";
+  const url_image = "http://127.0.0.1:8000";
   const [acc1, setAcc1] = useState(JSON.parse(localStorage.getItem("user")));
 
   useEffect(() => {
@@ -272,7 +272,7 @@ function UserEdit(props) {
                 </div>
                 {imagePreview && (
                   <img
-                    src={anh + imagePreview}
+                    src={url_image + imagePreview}
                     alt="Ảnh"
                     width="100"
                     height="100"

@@ -1,17 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import { IconName, IoEnterOutline, IoPerson } from "react-icons/io5";
+import UserModel from "../models/UserModel";
 function Header(props) {
   const [acc, setAcc] = useState(JSON.parse(localStorage.getItem('user')));
-  const navigate = useNavigate();
-  const { id } = useParams();
+
+  useEffect(() => {
+    UserModel.find(acc.id)
+      .then((res) => {
+        const data = res.data; // Truy cập dữ liệu từ kết quả
+        setAcc(data); // Đặt giá trị của acc bằng dữ liệu
+      })
+      .catch((error) => {
+        console.error(error); // Xử lý lỗi nếu có
+      });
+  }, []);
+
   const LogOut = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('jwtToken');
     setAcc(null);
   };
-  const url = 'http://127.0.0.1:8000';
   return (
     <>
         <header className="app-header app-header-dark">
@@ -145,7 +155,7 @@ function Header(props) {
                     aria-expanded="false"
                   >
                     <span className="user-avatar user-avatar-md">
-                      <img src={url + acc.image} alt="" />
+                      <img src={acc.url_image} alt="" />
                     </span>{" "}
                     <span className="account-summary pr-lg-4 d-none d-lg-block">
                       <span className="account-name">{acc.name}</span>{" "}
