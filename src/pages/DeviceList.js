@@ -21,29 +21,12 @@ function DeviceList(props) {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const deviceModel = new DeviceModel();
-        const deviceTypeModel = new DeviceTypeModel();
-
-        async function fetchData() {
-            try {
-                const deviceData = await deviceModel.getAllDevices();
-                const deviceTypeData = await deviceTypeModel.getDeviceType();
-
-                const devicesWithTypes = deviceData.map((device) => ({
-                    ...device,
-                    device_type: deviceTypeData.find((type) => type.id === device.device_type_id),
-                }));
-
-                setDevices(devicesWithTypes);
-                setDeviceTypes(deviceTypeData);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        }
-
-        fetchData();
+        const deviceModel = new DeviceModel(); // Tạo thể hiện của DeviceModel
+        deviceModel.getAllDevices().then((res) => {
+            setDevices(res.data); // Đây sẽ là dữ liệu, không phải response object
+        });
     }, []);
-
+    console.log(devices);
     const handleAddToCart = (device) => {
         const existingItemIndex = cart.findIndex(item => item.device_id === device.id);
 
@@ -169,6 +152,7 @@ function DeviceList(props) {
                                 </thead>
                                 <tbody>
                                     {filteredDevices.map((device, index) => (
+                                        
                                         <tr key={device.id}>
                                             <td>{index + 1}</td>
                                             <td className="device-cell">
@@ -176,16 +160,15 @@ function DeviceList(props) {
                                                     <Link to={`/borrows/${device.id}`} className="tile tile-img mr-1">
                                                         <img
                                                             className="img-fluid"
-                                                            src={device.image_url}
+                                                            src={device.url_image}
                                                             alt={device.name}
                                                         />
                                                     </Link>
                                                     <span>{device.name}</span>
                                                 </div>
                                             </td>
-
                                             <td>{device.quantity}</td>
-                                            <td>{device.device_type.name}</td>
+                                            <td>{device.devicetype.name}</td>
                                             <td>
                                                 <button
                                                     onClick={() => handleAddToCart(device)}
