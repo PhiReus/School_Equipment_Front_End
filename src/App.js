@@ -11,14 +11,15 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<DeviceList />}></Route>
-        <Route path="/Cart" element={<Cart />}></Route>
+
+      <Route path="/cart" element={<Cart/>}></Route>
         <Route path="/users/profile" element={<UserProfile />}></Route>
         <Route path="/users/update-profile" element={<UserEdit />}></Route>
-        <Route path="/Borrows" element={<Borrow />}></Route>
+        <Route path="/borrows" element={<Borrow />}></Route>
+        <Route path="/" element={<DeviceList />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/forgot" element={<ForgotPassword />}></Route>
-        <Route path="/Devices" element={<DeviceList />}></Route>
+        <Route path="/devices" element={<DeviceList />}></Route>
       </Routes>
     </>
   );

@@ -71,8 +71,7 @@ function Cart(props) {
 
         console.log(cartData);
 
-        // Set gia tri mac dinh cho lesson_name va quantity
-        let emptyDevice = [];
+       let emptyDevice = [];
         let emptyLessons = [];
         let emptyQuantity = [];
         let emptySession = [];
@@ -109,8 +108,10 @@ function Cart(props) {
             user_id: userData.id
         });
     }, []);
-
+  // Set gia tri mac dinh cho lesson_name va quantity
+       
     if (acc1 !== null){
+
 
     const handleRemove = (index) => {
         const newData = [...data];
@@ -259,7 +260,7 @@ function Cart(props) {
                                                                 <Link to={`/borrows/${item.device_id}`} className="tile tile-img mr-1">
                                                                     <img
                                                                         className="img-fluid"
-                                                                        src={item.device && item.device.image ? imageBaseUrl + item.device.image : ''}
+                                                                        src={item.device && item.device.url_image ? item.device.url_image : ''}
                                                                         alt={item.name}
                                                                     />
                                                                 </Link>
