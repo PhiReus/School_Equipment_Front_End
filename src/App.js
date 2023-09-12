@@ -1,17 +1,17 @@
 import UserEdit from "./pages/users/UserEdit";
 import Cart from "./pages/Cart";
-import { Route, Routes } from "react-router-dom";
+import {Route, Routes } from "react-router-dom";
 import Borrow from "./pages/Borrow";
 import Login from "./pages/auth/Login";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import UserProfile from "./pages/users/UserProfile";
 import DeviceList from "./pages/DeviceList";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
     <>
       <Routes>
-
       <Route path="/cart" element={<Cart/>}></Route>
         <Route path="/users/profile" element={<UserProfile />}></Route>
         <Route path="/users/update-profile" element={<UserEdit />}></Route>
@@ -20,6 +20,7 @@ function App() {
         <Route path="/login" element={<Login />}></Route>
         <Route path="/forgot" element={<ForgotPassword />}></Route>
         <Route path="/devices" element={<DeviceList />}></Route>
+        <Route path='*' element={<NotFound />}/>
       </Routes>
     </>
   );
