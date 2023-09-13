@@ -2,6 +2,7 @@ import UserEdit from "./pages/users/UserEdit";
 import Cart from "./pages/Cart";
 import { Route, Routes } from "react-router-dom";
 import Borrow from "./pages/Borrow";
+import BorrowEdit from "./pages/BorrowEdit";
 import Login from "./pages/auth/Login";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import UserProfile from "./pages/users/UserProfile";
@@ -16,6 +17,7 @@ function App() {
         <Route path="/users/profile" element={<UserProfile />}></Route>
         <Route path="/users/update-profile" element={<UserEdit />}></Route>
         <Route path="/borrows" element={<Borrow />}></Route>
+        <Route path="/borrows/:id/edit" element={<BorrowEdit />}></Route>
         <Route path="/" element={<DeviceList />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/forgot" element={<ForgotPassword />}></Route>
