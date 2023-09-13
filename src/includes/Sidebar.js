@@ -1,104 +1,61 @@
 import React from "react";
 import { Link } from "react-router-dom";
 function Sidebar(props) {
-  return (
-    <>
-       <div className="aside-menu overflow-hidden">
-        {/* .stacked-menu */}
-        <nav id="stacked-menu" className="stacked-menu">
-          {/* .menu */}
-          <ul className="menu">
-            {/* .menu-item */}
-            <li className="menu-item">
-              <Link to={'/'} className="menu-link">
-              <span class="menu-icon fas fa-home"></span>
-                <span className="menu-text">Trang chủ</span>
-              </Link>
-            </li>
-            {/* /.menu-item */}
-            {/* .menu-item */}
-            {/* .menu-header */}
-            <li className="menu-header">Danh Mục </li>
-            {/* /.menu-header */}
-            {/* .menu-item */}
-            {/* .menu-item */}
-            <li className="menu-item has-child">
-              <a href="#" className="menu-link">
-              <span class="menu-icon"><i class="fas fa-users"></i></span>
-                  
-                <span className="menu-text">Giáo Viên</span>
-              </a>{" "}
-              {/* child menu */}
-              <ul className="menu">
-                <li className="menu-item">
-                  <Link to={'/'} className="menu-link">
-                    Danh Sách
-                  </Link>
-                </li>
-              </ul>
-              {/* /child menu */}
-            </li>
-            {/* /.menu-item */}
-            {/* .menu-item */}
-            <li className="menu-item has-child">
-              <a href="#" className="menu-link">
-              <span class="menu-icon oi oi-browser"></span>
-                <span className="menu-text">Thiết Bị</span>{" "}
-              </a>
-              {/* child menu */}
-              <ul className="menu">
-                <li className="menu-item">
-                  <Link to={'/Devices'} className="menu-link">
-                    Danh Sách
-                  </Link>
-                </li>
-              </ul>
-              {/* /child menu */}
-            </li>
-            {/* /.menu-item */}
-            {/* .menu-item */}
-            {/* /.menu-item */}
-            <li className="menu-item has-child">
-              <a href="#" className="menu-link">
-                {" "}
-                
-                <span class="menu-icon"><i class="fas fa-book"></i></span>
-                
-                <span className="menu-text">Phiếu Mượn</span>
-              </a>{" "}
-              {/* child menu */}
-              <ul className="menu">
-                <li className="menu-item">
-                  <Link to={'/Borrows'} className="menu-link">
-                    Danh Sách Phiếu
-                  </Link>
-                </li>
-              </ul>
-              {/* /child menu */}
-            </li>
-            <li className="menu-item has-child">
-              <a href="#" className="menu-link">
-              <span class="menu-icon"><i class="fas fa-book"></i></span>
-                <span className="menu-text">Cart</span>
-              </a>{" "}
-              {/* child menu */}
-              <ul className="menu">
-                <li className="menu-item">
-                  <a href="#" className="menu-link">
-                    Danh Sách Quyền
-                  </a>
-                </li>
-              </ul>
-              {/* /child menu */}
-            </li>
-            {/* /.menu-item */}
-          </ul>
-          {/* /.menu */}
-        </nav>
-        {/* /.stacked-menu */}
-      </div>      
-    </>
-  );
+	return (
+		<>
+			<div className="aside-menu overflow-hidden">
+				<nav id="stacked-menu" className="stacked-menu">
+					<ul className="menu">
+						<li className="menu-header">Thiết Bị</li>
+
+						<li className="menu-item">
+							<Link to={'/'} className="menu-link">
+								<span className="menu-icon"><i className="fas fa-book"></i></span>
+								<span className="menu-text">Thiết Bị</span>
+							</Link>
+						</li>
+
+						<li className="menu-item">
+							<Link to={'/borrows'} className="menu-link">
+								<span className="menu-icon"><i className="fas fa-book"></i></span>
+								<span className="menu-text">Phiếu Mượn</span>
+							</Link>
+						</li>
+
+						<li className="menu-item">
+							<Link to={'/cart'} className="menu-link">
+								<span className="menu-icon"><i className="fas fa-book"></i></span>
+								<span className="menu-text">Giỏ Mượn</span>
+							</Link>
+						</li>
+
+						<li className="menu-header">Tài Khoản</li>
+
+						<li className="menu-item">
+							<Link to={'/users/profile'} className="menu-link">
+								<span className="menu-icon"><i className="fas fa-book"></i></span>
+								<span className="menu-text">Tài Khoản</span>
+							</Link>
+						</li>
+
+						<li className="menu-item">
+							<Link to={'/users/update-profile'} className="menu-link">
+								<span className="menu-icon"><i className="fas fa-book"></i></span>
+								<span className="menu-text">Cập Nhật Tài Khoản</span>
+							</Link>
+						</li>
+
+						<li className="menu-item">
+							<Link to={'/users/logout'} className="menu-link">
+								<span className="menu-icon"><i className="fas fa-book"></i></span>
+								<span className="menu-text">Thoát</span>
+							</Link>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</>
+	);
 }
 
 export default Sidebar;
