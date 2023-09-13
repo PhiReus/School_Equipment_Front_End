@@ -1,160 +1,85 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import LayoutMaster from '../layouts/LayoutMaster';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux'; // Thêm import cho useDispatch
-import { SET_CART } from '../redux/action';
-import Swal from 'sweetalert2';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import BorrowModel from '../models/BorrowModel';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { format } from 'date-fns';
 import RoomModel from '../models/RoomModel';
-import BorrowModel from '../models/BorrowModel';
+import Swal from 'sweetalert2';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'; //
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-const imageBaseUrl = 'http://127.0.0.1:8000'; // Đường dẫn cơ sở cho ảnh
-
-const SignupSchema = Yup.object().shape({
+const EditSchema = Yup.object().shape({
     borrow_date: Yup.string().required('Vui lòng nhập ngày mượn!'),
 });
 
-function Cart(props) {
+function EditBorrow() {
     const navigate = useNavigate();
+    const { id } = useParams();
     const [acc1, setAcc1] = useState(JSON.parse(localStorage.getItem('user')));
-    const [data, setData] = useState([]);
-    const [formData, setFormData] = useState({
-        borrow_date: '',
-        borrow_note: '',
-        devices:
-        {
-            id: [],
-            lesson_name: [],
-            quantity: [],
-            session: [],
-            lecture_name: [],
-            room_id: [],
-            lecture_number: [],
-            return_date: [],
-        }
-    });
-    const dispatch = useDispatch();
+    const [formData, setFormData] = useState({});
 
     const [rooms, setRooms] = useState([]);
     const [createdAt, setCreatedAt] = useState('');
 
-    const user = JSON.parse(localStorage.getItem('user')); // Lấy thông tin người dùng từ local storage
-    const [userData, setUserData] = useState(user);
-    useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
 
+    useEffect(() => {
+        const borrowModel = new BorrowModel();
+        borrowModel.find(id)
+            .then((res) => {
+                setFormData(res);
+            })
+            .catch((error) => {
+                console.error('Error fetching borrow data:', error);
+            });
+    },[])
+
+    useEffect(() => {
         // Lấy ngày hiện tại và định dạng thành chuỗi yyyy-MM-ddTHH:mm để điền vào trường "Ngày tạo phiếu"
         const currentDate = new Date();
         const formattedDate = format(currentDate, "HH:mm:ss dd/MM/yyyy");
         setCreatedAt(formattedDate);
+
         const roomModel = new RoomModel();
         roomModel.getRoom()
-            .then((response) => {
-                setRooms(response);
+            .then((res) => {
+                setRooms(res);
             })
             .catch((error) => {
                 console.error('Error fetching rooms:', error);
             });
-    }, []);
-    
-    useEffect(() => {
 
+        // Lấy dữ liệu phiếu mượn cần chỉnh sửa
         
-        // Set gia tri cho cart
-        const cartData = JSON.parse(localStorage.getItem('cart')) || [];
-        setData(cartData);
-
-        console.log(cartData);
-
-       let emptyDevice = [];
-        let emptyLessons = [];
-        let emptyQuantity = [];
-        let emptySession = [];
-        let emptyLecture = [];
-        let emptyRoom = [];
-        let emptyLectureNumber = [];
-        let emptyReturn = [];
-
-        for (let i = 0; i < cartData.length; i++) {
-            emptyDevice.push(cartData[i].device_id)
-            emptyLessons.push('')
-            emptyQuantity.push(cartData[i].quantity)
-            emptySession.push('Sáng')
-            emptyLecture.push('')
-            emptyRoom.push('1')
-            emptyLectureNumber.push('1')
-            emptyReturn.push('')
-        }
-        const new_devices = {
-            id: emptyDevice,
-            lesson_name: emptyLessons,
-            quantity: emptyQuantity,
-            session: emptySession,
-            lecture_name: emptyLecture,
-            room_id: emptyRoom,
-            lecture_number: emptyLectureNumber,
-            return_date: emptyReturn,
-        }
-
-        console.log(userData);
-        setFormData({
-            ...formData,
-            devices: new_devices,
-            user_id: userData.id
-        });
-    }, []);
-  // Set gia tri mac dinh cho lesson_name va quantity
-       
-    if (acc1 !== null){
-
-
-    const handleRemove = (index) => {
-        const newData = [...data];
-        newData.splice(index, 1);
-        localStorage.setItem("cart", JSON.stringify(newData));
-        dispatch({
-            type: SET_CART,
-            payload: newData,
-        });
-        setData(newData);
-    };
-
+    }, [id]);
 
     const handleSubmit = async (values, { resetForm }) => {
         try {
             const borrowModel = new BorrowModel();
-            const response = await borrowModel.createBorrow(values);
+            const res = await borrowModel.update(id, values);
 
-            if (response) {
-                console.log('Borrow record created successfully:', response.data);
-                localStorage.removeItem('cart');
-                dispatch({ type: SET_CART, payload: [] });
+            if (res) {
 
                 // Show a success message in Vietnamese
                 Swal.fire({
                     icon: 'success',
                     title: 'Thành công!',
-                    text: 'Tạo phiếu mượn thành công!',
+                    text: 'Cập nhật phiếu mượn thành công!',
                 });
 
                 resetForm(); // Clear the form fields if needed
-                navigate('/borrows'); // Navigate to the 'borrows' page
+                navigate('/borrows'); // Navigate back to the 'borrows' page
             } else {
-                console.error('Error creating borrow record.');
+                console.error('Error updating borrow record.');
             }
         } catch (error) {
             console.error('An error occurred:', error);
         }
     };
-
-    return (
+    console.log(formData);
+    return (  
+        
         <LayoutMaster>
-
             <header className="page-title-bar">
                 <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
@@ -167,12 +92,13 @@ function Cart(props) {
                     </ol>
                 </nav>
                 <div className="d-md-flex align-items-md-start">
-                    <h1 className="page-title mr-sm-auto"> Phiếu Mượn</h1>
+                    <h1 className="page-title mr-sm-auto"> Chỉnh Sửa Phiếu Mượn</h1>
                 </div>
             </header>
+
             <Formik
                 initialValues={formData}
-                validationSchema={SignupSchema}
+                validationSchema={EditSchema}
                 onSubmit={handleSubmit}
                 enableReinitialize={true}
             >
@@ -181,18 +107,17 @@ function Cart(props) {
                         <div className="card">
                             <div className="card-body">
                                 <legend>Thông tin cơ bản</legend>
-
                                 <div className="row">
                                     <div className="col-lg-4">
                                         <div className="form-group">
                                             <label htmlFor="user_id">Người mượn</label>
-                                            <p className='form-control-static'>{userData ? userData.name : ''}</p>
+                                            <p className='form-control-static'>{acc1 ? acc1.name : ''}</p>
                                         </div>
                                     </div>
                                     <div className="col-lg-4">
                                         <div className="form-group">
                                             <label htmlFor="created_at">Ngày tạo phiếu</label>
-                                            <p className='form-control-static'>{createdAt}</p>
+                                            <p className='form-control-static'></p>
                                         </div>
                                     </div>
                                     <div className="col-lg-4">
@@ -204,10 +129,10 @@ function Cart(props) {
                                                 className="form-control"
                                                 placeholder="Nhập ngày mượn"
                                             />
-                                            {errors.borrow_date && touched.borrow_date ? (
+                                            {/* {console.log(formData)} */}
+                                            {/* {errors.borrow_date && touched.borrow_date && (
                                                 <div style={{ color: 'red' }}>{errors.borrow_date}</div>
-                                            ) : null}
-
+                                            )} */}
                                         </div>
                                     </div>
                                 </div>
@@ -218,20 +143,14 @@ function Cart(props) {
                                         className="form-control"
                                         placeholder="Nhập ghi chú"
                                     />
-                                    {errors.borrow_note && touched.borrow_note ? (
-                                        <div className="text-danger">{errors.borrow_note}</div>
-                                    ) : null}
                                 </div>
                             </div>
                         </div>
+
                         <div className="page-section">
                             <div className="card card-fluid">
                                 <div className="card-body">
-                            <legend>Chi tiết phiếu mượn</legend>
-                                    <div className="row mb-2">
-                                        <div className="col"></div>
-                                    </div>
-
+                                    <legend>Chi tiết phiếu mượn</legend>
                                     <div className="table-responsive">
                                         <table className="table">
                                             <thead>
@@ -245,34 +164,34 @@ function Cart(props) {
                                                     <th>Lớp</th>
                                                     <th>Tiết TKB</th>
                                                     <th>Ngày trả</th>
-
-                                                    <th></th>
-
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {data.map((item, index) => (
-                                                    <tr key={item.device_id}>
-                                                        <td>{index + 1}</td>
+                                                
+                                                    <tr>
+                                                        <td>{formData.data.id}</td>
                                                         <td className="device-cell">
-                                                            <div className="device-info">
-                                                                <Field type="hidden" name={`devices[id][${index}]`} value={item.device_id} />
-                                                                <Link to={`/borrows/${item.device_id}`} className="tile tile-img mr-1">
-                                                                    <img
-                                                                        className="img-fluid"
-                                                                        src={item.device && item.device.url_image ? item.device.url_image : ''}
-                                                                        alt={item.name}
-                                                                    />
-                                                                </Link>
-                                                                <span>{item.device ? item.device.name : 'Tên không tồn tại'}</span>
-                                                            </div>
+                                                            <Link
+                                                                to={`/devices/${device.id}`}
+                                                                className="tile tile-img mr-1"
+                                                            >
+                                                                <img
+                                                                    className="img-fluid"
+                                                                    src={formData.data.devices.image}
+                                                                    alt=""
+                                                                />
+                                                            </Link>
+                                                            <span>
+                                                                {formData.data.devices.name || 'Tên không tồn tại'}
+                                                            </span>
                                                         </td>
                                                         <td width="100">
                                                             <Field
-                                                                name={`devices[quantity][${index}]`}
+                                                                name={formData.data.the_devices.quantity}
                                                                 type="number"
                                                                 className="form-control input-sm"
                                                             />
+
                                                         </td>
 
 
@@ -336,44 +255,27 @@ function Cart(props) {
                                                         </td>
 
 
-
-                                                        <td className="align-middle" width="100px">
-                                                            <div className="d-flex justify-content-center align-items-center">
-                                                                <button onClick={() => handleRemove(index)} className="btn btn-sm btn-icon btn-secondary">
-                                                                    <FontAwesomeIcon icon={faTrash} /> {/* Replace the text "Xóa" with the trash icon */}
-                                                                </button>
-                                                            </div>
-                                                        </td>
-
-
                                                     </tr>
-                                                ))}
+                                                
                                             </tbody>
                                         </table>
                                     </div>
                                     <div className="form-group">
                                         <button type="submit" className="btn btn-primary ml-auto float-right">
-                                            Tạo phiếu mượn
+                                            Cập nhật phiếu mượn
                                         </button>
-                                        <button
-                                            onClick={() => navigate('/devices')}
-                                            className="btn btn-secondary"
-                                        >
+                                        <Link to="/borrows" className="btn btn-secondary">
                                             Quay lại
-                                        </button>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </Form>
                 )}
             </Formik>
         </LayoutMaster>
     );
-    }else {
-        navigate('/login');
-    }
 }
 
-export default Cart;
+export default EditBorrow;

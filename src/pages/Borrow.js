@@ -97,14 +97,14 @@ function Borrow(props) {
                                                 <option value="Từ chối">Từ chối</option>
                                             </select>
                                         </div>
-
-                                        <div className="col-lg-2">
-                                            <button className="btn btn-secondary" type="submit">
-                                                Tìm Kiếm
-                                            </button>
+                                            <div className="col-lg-2">
+                                                <button className="btn btn-secondary" type="submit">
+                                                    Tìm Kiếm
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                </form>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                         <div className="table-responsive">
@@ -140,6 +140,5 @@ function Borrow(props) {
             </div>
         </LayoutMaster>
     );
-    
 }
 export default Borrow;
