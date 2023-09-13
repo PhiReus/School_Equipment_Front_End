@@ -3,124 +3,100 @@ import LayoutMaster from '../layouts/LayoutMaster';
 import BorrowModel from '../models/BorrowModel';
 import { format } from 'date-fns';
 import { Link, useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons'; // Import arrow icons
+import Breadcrumb from '../includes/Breadcrumb';
+import Pagination from '../includes/elements/Pagination';
 
 function Borrow(props) {
     const navigate = useNavigate();
-    const [acc1, setAcc1] = useState(JSON.parse(localStorage.getItem('user')));
     const [borrows, setBorrows] = useState([]);
-    const [searchCreatedDate, setSearchCreatedDate] = useState('');
-    const [searchBorrowDate, setSearchBorrowDate] = useState('');
-    const [searchBorrowDate_to, setSearchBorrowDate_to] = useState('');
-    const [searchStatus, setSearchStatus] = useState('');
-    const [searchApproved, setSearchApproved] = useState('');
-    const [totalReturned, setTotalReturned] = useState(0);
-    const [totalBorrowed, setTotalBorrowed] = useState(0);
-
     const user = JSON.parse(localStorage.getItem('user'));
 
+    // Phan trang
+    const [page,setPage] = useState(1);
+    const [pageData,setPageData] = useState({});
+    // Search
+    const [filter,setFilter] = useState({ is_active: 1 });
+    
+    if (user === null){
+        navigate('/login')
+    }
+
     useEffect(() => {
-        const borrowModel = new BorrowModel();
-        async function fetchData() {
-            try {
-                const data = await borrowModel.getAllBorrows();
-                setBorrows(data.data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
+        BorrowModel.getAllBorrows({
+            page: page,
+            filter: filter
+        }).then( res => {
+            setBorrows(res.data);
+            // Phan trang
+            const meta = {
+                last_page: res.last_page,
+                total: res.total,
+                from: res.from,
+                to: res.to,
+                current_page : res.current_page
             }
-        }
-        fetchData();
-    }, []);
+            setPageData(meta);
+        }).catch( err => {
+            console.error('Error fetching data:', err);
+        })
+    }, [page,filter]);
 
-    if (acc1 !== null) {
-        // Chuyển đổi ngày tháng sang định dạng dễ đọc
-        function formatDateString(dateString) {
-            const formattedDate = format(new Date(dateString), "HH:mm:ss dd/MM/yyyy");
-            return formattedDate;
-        }
+    const handleChangeFilter = (event) => {
+        setPage(1);
+        setFilter({
+            ...filter,
+            [event.target.name]: event.target.value
+        });
+    }
+    return (
+        <LayoutMaster>
+            <Breadcrumb page_title="Danh sách thiết bị"/>
 
-        return (
-            <LayoutMaster>
-                <header className="page-title-bar">
-                    <nav aria-label="breadcrumb">
-                        <ol className="breadcrumb">
-                            <li className="breadcrumb-item active">
-                                <Link to="/devices">
-                                    <i className="breadcrumb-icon fa fa-angle-left mr-2" />
-                                    Trang Chủ
-                                </Link>
-                            </li>
-                        </ol>
-                    </nav>
-                    <div className="d-md-flex align-items-md-start">
-                        <h1 className="page-title mr-sm-auto"> Danh Sách Phiếu Mượn</h1>
-                    </div>
-                </header>
+            <div className="page-section">
+                <div className="card card-fluid">
+                    <div className="card-body">
+                        <div className="row mb-2">
+                            <div className="col">
+                                <form action="{{ route('devices.index') }}" method="GET" id="form-search" onChange={handleChangeFilter}>
+                                    <div className="row">
+                                        <div className="col">
+                                            <input
+                                                name="searchBorrowDate"
+                                                className="form-control"
+                                                type="date"
+                                                placeholder="Tìm theo ngày mượn từ..."
+                                            />
+                                        </div>
+                                        <div className="col">
+                                            <input
+                                                name="searchBorrowDate_to"
+                                                className="form-control"
+                                                type="date"
+                                                placeholder="Tìm theo ngày mượn đến..."
+                                            />
+                                        </div>
+                                        <div className="col">
+                                            <select
+                                                name="searchStatus"
+                                                className="form-control"
+                                            >
+                                                <option value="">-- Chọn tình trạng --</option>
+                                                <option value="Đã trả">Đã trả</option>
+                                                <option value="Chưa trả">Chưa trả</option>
+                                            </select>
+                                        </div>
 
-                <div className="page-section">
-                    <div className="card card-fluid">
-                        <div className="card-header">
-                            <ul className="nav nav-tabs card-header-tabs">
-                                <li className="nav-item">
-                                    <Link className="nav-link active " to="/borrows">
-                                        Tất Cả
-                                    </Link>
-                                </li>
-                            </ul>
-                        </div>
-                        <div className="card-body">
-                            <div className="row mb-2">
-                                <div className="col">
-                                    <form action="{{ route('devices.index') }}" method="GET" id="form-search">
-                                        <div className="row">
-                                            <div className="col">
-                                                <input
-                                                    name="searchBorrowDate"
-                                                    className="form-control"
-                                                    type="date"
-                                                    placeholder="Tìm theo ngày mượn từ..."
-                                                    value={searchBorrowDate}
-                                                    onChange={(e) => setSearchBorrowDate(e.target.value)}
-                                                />
-                                            </div>
-                                            <div className="col">
-                                                <input
-                                                    name="searchBorrowDate_to"
-                                                    className="form-control"
-                                                    type="date"
-                                                    placeholder="Tìm theo ngày mượn đến..."
-                                                    value={searchBorrowDate_to}
-                                                    onChange={(e) => setSearchBorrowDate_to(e.target.value)}
-                                                />
-                                            </div>
-                                            <div className="col">
-                                                <select
-                                                    name="searchStatus"
-                                                    className="form-control"
-                                                    value={searchStatus}
-                                                    onChange={(e) => setSearchStatus(e.target.value)}
-                                                >
-                                                    <option value="">-- Chọn tình trạng --</option>
-                                                    <option value="1">Đã trả</option>
-                                                    <option value="0">Chưa trả</option>
-                                                </select>
-                                            </div>
-
-                                            <div className="col">
-                                                <select
-                                                    name="searchApproved"
-                                                    className="form-control"
-                                                    value={searchApproved}
-                                                    onChange={(e) => setSearchApproved(e.target.value)}
-                                                >
-                                                    <option value="">-- Chọn xét duyệt --</option>
-                                                    <option value="1">Đã duyệt</option>
-                                                    <option value="0">Chưa duyệt</option>
-                                                    <option value="2">Từ chối</option>
-                                                </select>
-                                            </div>
-
+                                        <div className="col">
+                                            <select
+                                                name="searchApproved"
+                                                className="form-control"
+                                            >
+                                                <option value="">-- Chọn xét duyệt --</option>
+                                                <option value="Đã duyệt">Đã duyệt</option>
+                                                <option value="Chưa duyệt">Chưa duyệt</option>
+                                                <option value="Từ chối">Từ chối</option>
+                                            </select>
+                                        </div>
                                             <div className="col-lg-2">
                                                 <button className="btn btn-secondary" type="submit">
                                                     Tìm Kiếm
@@ -130,63 +106,39 @@ function Borrow(props) {
                                     </form>
                                 </div>
                             </div>
-
-                            <div className="table-responsive">
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th>STT</th>
-                                            <th>Người dùng</th>
-                                            <th>Ngày tạo phiếu</th>
-                                            <th>Ngày mượn</th>
-                                            <th>Tình trạng</th>
-                                            <th>Xét duyệt</th>
-                                            <th>Chức năng</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {borrows.map((borrow, index) => (
-                                            borrow.user_id === user.id && (
-                                                <tr key={index}>
-                                                    <td>{index + 1}</td>
-                                                    <td>{user.name}</td>
-                                                    <td>{formatDateString(borrow.created_at)}</td>
-                                                    <td>{new Date(borrow.borrow_date).toLocaleDateString()}</td>
-                                                    <td>{borrow.status ? 'Đã trả' : 'Chưa trả'} ({borrow.tong_tra}/{borrow.tong_muon})</td>
-                                                    <td>{borrow.approved === '2' ? 'Từ chối' : (borrow.approved === '1' ? 'Đã duyệt' : 'Chưa duyệt')}</td>
-                                                    <td>
-                                                        {borrow.approved !== '1' && (
-                                                            <>
-                                                                <Link
-                                                                    to={`/borrows/${borrow.id}/edit`}
-                                                                    className="btn btn-sm btn-icon btn-secondary"
-                                                                >
-                                                                    <i className="fa fa-pencil-alt"></i>
-                                                                </Link>
-                                                                <button
-                                                                    // onClick={() => handleDelete(borrow.id)}
-                                                                    className="btn btn-sm btn-icon btn-secondary"
-                                                                >
-                                                                    <i className="far fa-trash-alt"></i>
-                                                                </button>
-                                                            </>
-                                                        )}
-                                                    </td>
-                                                </tr>
-                                            )
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-
-
                         </div>
+                        <div className="table-responsive">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Người dùng</th>
+                                        <th>Ngày tạo phiếu</th>
+                                        <th>Ngày mượn</th>
+                                        <th>Tình trạng</th>
+                                        <th>Xét duyệt</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {borrows.map((borrow, index) => (
+                                        <tr key={index}>
+                                            <td>{index + 1}</td>
+                                            <td>{user.name}</td>
+                                            <td>{borrow.created_date}</td>
+                                            <td>{new Date(borrow.borrow_date).toLocaleDateString()}</td>
+                                            <td>
+                                                {borrow.status ? 'Đã trả' : 'Chưa trả'} ({borrow.tong_tra}/{borrow.tong_muon})
+                                            </td>                                                <td>{borrow.approved === '2' ? 'Từ chối' : (borrow.approved === '1' ? 'Đã duyệt' : 'Chưa duyệt')}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        <Pagination pageData={pageData} setPage={setPage}/>
                     </div>
                 </div>
-            </LayoutMaster>
-        );
-    } else {
-        navigate('/login')
-    }
+            </div>
+        </LayoutMaster>
+    );
 }
 export default Borrow;
