@@ -57,7 +57,7 @@ function Borrow(props) {
                     <div className="card-body">
                         <div className="row mb-2">
                             <div className="col">
-                                <form action="{{ route('devices.index') }}" method="GET" id="form-search" onSubmit={handleSearchSubmit} onChange={handleChangeFilter}>
+                                <form action="{{ route('devices.index') }}" method="GET" id="form-search" onChange={handleChangeFilter}>
                                     <div className="row">
                                         <div className="col">
                                             <input
