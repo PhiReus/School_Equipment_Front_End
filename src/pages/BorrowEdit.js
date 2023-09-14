@@ -125,6 +125,7 @@ function EditBorrow() {
     const handleSubmit = (formData) => {
         try{
             BorrowModel.update(id,formData).then(()=>{
+                
                 Swal.fire({
                     icon: "success",
                     title: "Cập nhật phiếu mượn thành công!",

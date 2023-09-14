@@ -118,7 +118,7 @@ function DeviceList(props) {
                                                     name="searchQuantity"
                                                     className="form-control"
                                                 >
-                                                    <option value="">Tất cả</option>
+                                                    <option value="">Tìm theo tình trạng</option>
                                                     <option value="1">Thiết bị còn</option>
                                                     <option value="0">thiết bị đã hết</option>
                                                 </select>
@@ -129,7 +129,7 @@ function DeviceList(props) {
                                                     name="device_type_id"
                                                     className="form-control"
                                                 >
-                                                    <option value="">Tất cả</option>
+                                                    <option value="">Tìm theo loại thiết bị</option>
                                                     {deviceTypes.map((deviceType) => (
                                                         <option key={deviceType.id} value={deviceType.id}>
                                                             {deviceType.name}
