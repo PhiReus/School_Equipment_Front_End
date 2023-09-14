@@ -11,4 +11,4 @@ class DeviceModel {
     }
 }
 
-export default DeviceModel;
+export default new DeviceModel;

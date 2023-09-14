@@ -127,8 +127,7 @@ function Cart(props) {
 
     const handleSubmit = async (values, { resetForm }) => {
         try {
-            const borrowModel = new BorrowModel();
-            const response = await borrowModel.createBorrow(values);
+            const response = await BorrowModel.createBorrow(values);
 
             if (response) {
                 console.log('Borrow record created successfully:', response.data);
