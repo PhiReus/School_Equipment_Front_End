@@ -16,10 +16,6 @@ function Borrow(props) {
     // Search
     const [filter, setFilter] = useState({ user_id: user.id });
 
-    if (user === null) {
-        navigate('/login')
-    }
-
     useEffect(() => {
         BorrowModel.getAllBorrows({
             page: page,
@@ -40,6 +36,7 @@ function Borrow(props) {
             [event.target.name]: event.target.value
         });
     }
+    if (user !== null) {
     return (
         <LayoutMaster>
             <Breadcrumb page_title="Danh sách thiết bị" />
@@ -130,5 +127,8 @@ function Borrow(props) {
 
         </LayoutMaster>
     );
+    } else {
+      navigate("/login");
+    }
 }
 export default Borrow;
