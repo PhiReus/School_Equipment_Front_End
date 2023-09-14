@@ -105,6 +105,7 @@ function Borrow(props) {
                                     <th>Ngày mượn</th>
                                     <th>Tình trạng</th>
                                     <th>Xét duyệt</th>
+                                    <th>Chức năng</th>
                                 </tr>
                             </thead>
                             <tbody>

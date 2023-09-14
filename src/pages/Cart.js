@@ -52,8 +52,7 @@ function Cart(props) {
         const currentDate = new Date();
         const formattedDate = format(currentDate, "HH:mm:ss dd/MM/yyyy");
         setCreatedAt(formattedDate);
-        const roomModel = new RoomModel();
-        roomModel.getRoom()
+        RoomModel.getRoom()
             .then((response) => {
                 setRooms(response);
             })

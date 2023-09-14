@@ -12,4 +12,4 @@ class RoomModel {
     }
 }
 
-export default RoomModel;
+export default new RoomModel;

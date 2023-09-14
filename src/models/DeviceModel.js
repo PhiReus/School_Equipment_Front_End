@@ -5,8 +5,8 @@ class DeviceModel {
         this.api_url = 'http://127.0.0.1:8000/api/devices';
     }
 
-    async getAllDevices() {
-        const res = await axios.get(this.api_url);
+    async getAllDevices(data = {}) {
+        const res = await axios.get(this.api_url,{ params: data });
         return res.data;
     }
 }
