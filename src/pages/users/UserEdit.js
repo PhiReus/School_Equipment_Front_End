@@ -1,5 +1,5 @@
+
 import { Field, Form, Formik } from "formik";
-import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import UserModel from "../../models/UserModel";
@@ -7,6 +7,7 @@ import LayoutMaster from "../../layouts/LayoutMaster";
 import GroupModel from "../../models/GroupModel";
 import NestModel from "../../models/NestModel";
 import Swal from "sweetalert2";
+import { useEffect, useState } from "react";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Không được để trống !"),
@@ -19,7 +20,10 @@ const validationSchema = Yup.object().shape({
   nest_id: Yup.string().required("Không được để trống !"),
 });
 
+
 function UserEdit(props) {
+  
+  const [acc, setAcc] = useState(JSON.parse(localStorage.getItem("user")));
   const navigate = useNavigate();
   const [form, setForm] = useState({
     name: "",
@@ -34,8 +38,6 @@ function UserEdit(props) {
   });
   const [groups, setGroups] = useState([]);
   const [nests, setNests] = useState([]);
-  const [acc, setAcc] = useState(JSON.parse(localStorage.getItem("user")));
-
   useEffect(() => {
     // console.log(acc1.id);
     UserModel.find(acc.id)
@@ -65,7 +67,7 @@ function UserEdit(props) {
       });
   }, []);
 
-  if (acc !== null) {
+  
     const handleSubmit = (data) => {
       UserModel.update(acc.id, data)
         .then((res) => {
@@ -83,6 +85,8 @@ function UserEdit(props) {
         });
     };
     // console.log(form);
+  
+    if (acc !== null) {
     return (
       <LayoutMaster>
         <header className="page-title-bar">
@@ -313,9 +317,9 @@ function UserEdit(props) {
         </div>
       </LayoutMaster>
     );
-  } else {
-    navigate("/login");
-  }
+    }else{
+      navigate('/login')
+    } 
 }
 
 export default UserEdit;

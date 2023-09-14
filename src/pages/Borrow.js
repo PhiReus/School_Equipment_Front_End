@@ -9,17 +9,17 @@ import Pagination from '../includes/elements/Pagination';
 function Borrow(props) {
     const navigate = useNavigate();
     const [borrows, setBorrows] = useState([]);
-    const user = JSON.parse(localStorage.getItem('user'));
+    const [acc1, setAcc1] = useState(JSON.parse(localStorage.getItem("user")));
 
+    const user = JSON.parse(localStorage.getItem('user'));
+    
     // Phan trang
     const [page, setPage] = useState(1);
     const [pageData, setPageData] = useState({});
     // Search
     const [filter, setFilter] = useState({ is_active: 1 });
 
-    if (user === null) {
-        navigate('/login')
-    }
+    
 
     useEffect(() => {
         BorrowModel.getAllBorrows({
@@ -48,6 +48,7 @@ function Borrow(props) {
             [event.target.name]: event.target.value
         });
     }
+    if (acc1 !== null) {
     return (
         <LayoutMaster>
             <Breadcrumb page_title="Danh sách thiết bị" />
@@ -140,5 +141,8 @@ function Borrow(props) {
 
         </LayoutMaster>
     );
+    } else {
+    navigate("/login");
+    }
 }
 export default Borrow;
