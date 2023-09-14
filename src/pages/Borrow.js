@@ -12,12 +12,12 @@ function Borrow(props) {
     const user = JSON.parse(localStorage.getItem('user'));
 
     // Phan trang
-    const [page,setPage] = useState(1);
-    const [pageData,setPageData] = useState({});
+    const [page, setPage] = useState(1);
+    const [pageData, setPageData] = useState({});
     // Search
-    const [filter,setFilter] = useState({ is_active: 1 });
-    
-    if (user === null){
+    const [filter, setFilter] = useState({ is_active: 1 });
+
+    if (user === null) {
         navigate('/login')
     }
 
@@ -25,7 +25,7 @@ function Borrow(props) {
         BorrowModel.getAllBorrows({
             page: page,
             filter: filter
-        }).then( res => {
+        }).then(res => {
             setBorrows(res.data);
             // Phan trang
             const meta = {
@@ -33,13 +33,13 @@ function Borrow(props) {
                 total: res.total,
                 from: res.from,
                 to: res.to,
-                current_page : res.current_page
+                current_page: res.current_page
             }
             setPageData(meta);
-        }).catch( err => {
+        }).catch(err => {
             console.error('Error fetching data:', err);
         })
-    }, [page,filter]);
+    }, [page, filter]);
 
     const handleChangeFilter = (event) => {
         setPage(1);
@@ -50,7 +50,7 @@ function Borrow(props) {
     }
     return (
         <LayoutMaster>
-            <Breadcrumb page_title="Danh sách thiết bị"/>
+            <Breadcrumb page_title="Danh sách thiết bị" />
 
             <div className="page-section">
                 <div className="card card-fluid">
@@ -97,47 +97,47 @@ function Borrow(props) {
                                                 <option value="Từ chối">Từ chối</option>
                                             </select>
                                         </div>
-                                            <div className="col-lg-2">
-                                                <button className="btn btn-secondary" type="submit">
-                                                    Tìm Kiếm
-                                                </button>
-                                            </div>
+                                        <div className="col-lg-2">
+                                            <button className="btn btn-secondary" type="submit">
+                                                Tìm Kiếm
+                                            </button>
                                         </div>
-                                    </form>
-                                </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                        <div className="table-responsive">
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th>STT</th>
-                                        <th>Người dùng</th>
-                                        <th>Ngày tạo phiếu</th>
-                                        <th>Ngày mượn</th>
-                                        <th>Tình trạng</th>
-                                        <th>Xét duyệt</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {borrows.map((borrow, index) => (
-                                        <tr key={index}>
-                                            <td>{index + 1}</td>
-                                            <td>{user.name}</td>
-                                            <td>{borrow.created_date}</td>
-                                            <td>{new Date(borrow.borrow_date).toLocaleDateString()}</td>
-                                            <td>
-                                                {borrow.status ? 'Đã trả' : 'Chưa trả'} ({borrow.tong_tra}/{borrow.tong_muon})
-                                            </td>                                                <td>{borrow.approved === '2' ? 'Từ chối' : (borrow.approved === '1' ? 'Đã duyệt' : 'Chưa duyệt')}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                        <Pagination pageData={pageData} setPage={setPage}/>
                     </div>
+                    <div className="table-responsive">
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Người dùng</th>
+                                    <th>Ngày tạo phiếu</th>
+                                    <th>Ngày mượn</th>
+                                    <th>Tình trạng</th>
+                                    <th>Xét duyệt</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {borrows.map((borrow, index) => (
+                                    <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{user.name}</td>
+                                        <td>{borrow.created_date}</td>
+                                        <td>{new Date(borrow.borrow_date).toLocaleDateString()}</td>
+                                        <td>
+                                            {borrow.status ? 'Đã trả' : 'Chưa trả'} ({borrow.tong_tra}/{borrow.tong_muon})
+                                        </td>                                                <td>{borrow.approved === '2' ? 'Từ chối' : (borrow.approved === '1' ? 'Đã duyệt' : 'Chưa duyệt')}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    <Pagination pageData={pageData} setPage={setPage} />
                 </div>
             </div>
+
         </LayoutMaster>
     );
 }

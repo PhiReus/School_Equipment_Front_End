@@ -8,8 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { SET_CART } from '../redux/action';
 import Swal from 'sweetalert2';
 import DeviceTypeModel from '../models/DeviceTypeModel';
-
-const imageBaseUrl = 'http://127.0.0.1:8000'; // Đường dẫn cơ sở cho ảnh
+import Breadcrumb from '../includes/Breadcrumb';
+import Pagination from '../includes/elements/Pagination';
 
 function DeviceList(props) {
     const [devices, setDevices] = useState([]);
@@ -22,12 +22,46 @@ function DeviceList(props) {
     const [acc1, setAcc1] = useState(JSON.parse(localStorage.getItem('user')));
     const navigate = useNavigate();
 
+ // Phan trang
+ const [page, setPage] = useState(1);
+ const [pageData, setPageData] = useState({});
+ // Search
+ const [filter, setFilter] = useState({ is_active: 1 });
+
+    // useEffect(() => {
+    //     DeviceModel.getAllDevices().then((res) => {
+    //         setDevices(res.data); // Đây sẽ là dữ liệu, không phải response object
+    //     });
+    // }, []);
+
+
     useEffect(() => {
-        const deviceModel = new DeviceModel(); // Tạo thể hiện của DeviceModel
-        deviceModel.getAllDevices().then((res) => {
-            setDevices(res.data); // Đây sẽ là dữ liệu, không phải response object
+        DeviceModel.getAllDevices({
+            page: page,
+            filter: filter
+        }).then(res => {
+            setDevices(res.data);
+            // Phan trang
+            const meta = {
+                last_page: res.last_page,
+                total: res.total,
+                from: res.from,
+                to: res.to,
+                current_page: res.current_page
+            }
+            setPageData(meta);
+        }).catch(err => {
+            console.error('Error fetching data:', err);
+        })
+    }, [page, filter]);
+
+    const handleChangeFilter = (event) => {
+        setPage(1);
+        setFilter({
+            ...filter,
+            [event.target.name]: event.target.value
         });
-    }, []);
+    }
     console.log(devices);
     if (acc1 !== null) {
 
@@ -60,40 +94,10 @@ function DeviceList(props) {
             });
         };
 
-        // const filteredDevices = devices.filter((device) => {
-        //     const isNameMatch = device.name.toLowerCase().includes(searchName.toLowerCase());
-        
-        //     if (searchQuantity === "") {
-        //         return isNameMatch;
-        //     } else if (searchQuantity === "1") {
-        //         return isNameMatch && device.quantity > 0;
-        //     } else if (searchQuantity === "0") {
-        //         return isNameMatch && device.quantity === 0;
-        //     }
-        
-        //     if (searchDeviceType === "") {
-        //         return isNameMatch;
-        //     }
-        
-        //     return isNameMatch && device.devicetype.name.toLowerCase().includes(searchDeviceType.toLowerCase());
-        // });
         return (
             <LayoutMaster>
-                <header className="page-title-bar">
-                    <nav aria-label="breadcrumb">
-                        <ol className="breadcrumb">
-                            <li className="breadcrumb-item active">
-                                <Link to="/devices">
-                                    <i className="breadcrumb-icon fa fa-angle-left mr-2" />
-                                    Trang Chủ
-                                </Link>
-                            </li>
-                        </ol>
-                    </nav>
-                    <div className="d-md-flex align-items-md-start">
-                        <h1 className="page-title mr-sm-auto">Danh Sách Thiết Bị</h1>
-                    </div>
-                </header>
+                <Breadcrumb page_title="Danh sách thiết bị" />
+
                 <div className="page-section">
                     <div className="card card-fluid">
                         <div className="card-header">
@@ -108,13 +112,7 @@ function DeviceList(props) {
                         <div className="card-body">
                             <div className="row mb-2">
                                 <div className="col">
-                                    <form
-                                        onSubmit={(e) => {
-                                            e.preventDefault();
-                                            // Call a function to handle search
-                                        }}
-                                        id="form-search"
-                                    >
+                                    <form action="{{ route('devices.index') }}" method="GET" id="form-search" onChange={handleChangeFilter}>
                                         <div className="row">
                                             <div className="col">
                                                 <input
@@ -209,6 +207,7 @@ function DeviceList(props) {
                                 </Link>
                             </div>
                         </div>
+                        <Pagination pageData={pageData} setPage={setPage} />
                     </div>
                 </div>
             </LayoutMaster>
