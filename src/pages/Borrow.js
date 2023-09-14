@@ -137,7 +137,7 @@ function Borrow(props) {
                         <Pagination pageData={pageData} setPage={setPage}/>
                     </div>
                 </div>
-            </div>
+            
         </LayoutMaster>
     );
 }

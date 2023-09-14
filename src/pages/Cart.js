@@ -74,7 +74,7 @@ function Cart(props) {
        let emptyDevice = [];
         let emptyLessons = [];
         let emptyQuantity = [];
-        let emptySession = [];
+        let emptySession = [];  
         let emptyLecture = [];
         let emptyRoom = [];
         let emptyLectureNumber = [];
