@@ -117,6 +117,7 @@ function Borrow(props) {
                                     <th>Ngày mượn</th>
                                     <th>Tình trạng</th>
                                     <th>Xét duyệt</th>
+                                    <th>Chức năng</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -129,6 +130,15 @@ function Borrow(props) {
                                         <td>
                                             {borrow.status ? 'Đã trả' : 'Chưa trả'} ({borrow.tong_tra}/{borrow.tong_muon})
                                         </td>                                                <td>{borrow.approved === '2' ? 'Từ chối' : (borrow.approved === '1' ? 'Đã duyệt' : 'Chưa duyệt')}</td>
+                                        <td>
+                                            <Link
+                                                to={`/borrows/${borrow.id}/edit`}
+                                                className="btn btn-sm btn-icon btn-secondary"
+                                            >
+                                                <i className="fas fa-pencil-alt"></i> {/* Biểu tượng "Sửa" */}
+                                            </Link>
+                                        </td>
+                                       
                                     </tr>
                                 ))}
                             </tbody>

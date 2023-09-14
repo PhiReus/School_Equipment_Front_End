@@ -14,9 +14,6 @@ import Pagination from '../includes/elements/Pagination';
 function DeviceList(props) {
     const [devices, setDevices] = useState([]);
     const [deviceTypes, setDeviceTypes] = useState([]);
-    const [searchName, setSearchName] = useState(''); // State for search input
-    const [searchQuantity, setSearchQuantity] = useState(''); // State for search input
-    const [searchDeviceType, setSearchDeviceType] = useState('');
     const cart = useSelector((state) => state.cart);
     const dispatch = useDispatch();
     const [acc1, setAcc1] = useState(JSON.parse(localStorage.getItem('user')));
@@ -26,14 +23,7 @@ function DeviceList(props) {
  const [page, setPage] = useState(1);
  const [pageData, setPageData] = useState({});
  // Search
- const [filter, setFilter] = useState({ is_active: 1 });
-
-    // useEffect(() => {
-    //     DeviceModel.getAllDevices().then((res) => {
-    //         setDevices(res.data); // Đây sẽ là dữ liệu, không phải response object
-    //     });
-    // }, []);
-
+ const [filter, setFilter] = useState({});
 
     useEffect(() => {
         DeviceModel.getAllDevices({
@@ -42,14 +32,7 @@ function DeviceList(props) {
         }).then(res => {
             setDevices(res.data);
             // Phan trang
-            const meta = {
-                last_page: res.last_page,
-                total: res.total,
-                from: res.from,
-                to: res.to,
-                current_page: res.current_page
-            }
-            setPageData(meta);
+            setPageData(res.meta);
         }).catch(err => {
             console.error('Error fetching data:', err);
         })
@@ -120,16 +103,12 @@ function DeviceList(props) {
                                                     className="form-control"
                                                     type="text"
                                                     placeholder="Tìm theo tên..."
-                                                    value={searchName}
-                                                    onChange={(e) => setSearchName(e.target.value)}
                                                 />
                                             </div>
                                             <div className="col">
                                                 <select
                                                     name="searchQuantity"
                                                     className="form-control"
-                                                    value={searchQuantity}
-                                                    onChange={(e) => setSearchQuantity(e.target.value)}
                                                 >
                                                     <option value="">Tất cả</option>
                                                     <option value="1">Thiết bị còn</option>
@@ -143,14 +122,7 @@ function DeviceList(props) {
                                                     className="form-control"
                                                     type="text"
                                                     placeholder="Tìm theo loại thiết bị..."
-                                                    value={searchDeviceType}
-                                                    onChange={(e) => setSearchDeviceType(e.target.value)}
                                                 />
-                                            </div>
-                                            <div className="col-lg-2">
-                                                <button className="btn btn-secondary" type="submit">
-                                                    Tìm Kiếm
-                                                </button>
                                             </div>
                                         </div>
                                     </form>

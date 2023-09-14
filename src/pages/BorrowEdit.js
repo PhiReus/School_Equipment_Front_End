@@ -7,6 +7,7 @@ import * as Yup from 'yup';
 import { format } from 'date-fns';
 import RoomModel from '../models/RoomModel';
 import Swal from 'sweetalert2';
+import DeviceModel from '../models/DeviceModel';
 
 const EditSchema = Yup.object().shape({
     borrow_date: Yup.string().required('Vui lòng nhập ngày mượn!'),
@@ -38,6 +39,18 @@ function EditBorrow() {
     const [createdAt, setCreatedAt] = useState('');
 
     const user = JSON.parse(localStorage.getItem('user'));
+    const [linkImageDevice, setLinkImageDevice] = useState([]);
+    useEffect(() => {
+        DeviceModel.getAllDevices().then((res) => {
+            const newLinkImageDevice = res.data.reduce((acc, element) => {
+                acc[element.id] = element.url_image;
+                return acc;
+            }, {});
+            setLinkImageDevice(newLinkImageDevice);
+        });
+    }, []);
+    
+
 
     useEffect(() => {
         BorrowModel.find(id)
@@ -97,8 +110,7 @@ function EditBorrow() {
         const formattedDate = format(currentDate, "HH:mm:ss dd/MM/yyyy");
         setCreatedAt(formattedDate);
 
-        const roomModel = new RoomModel();
-        roomModel.getRoom()
+        RoomModel.getRoom()
             .then((res) => {
                 setRooms(res);
             })
@@ -233,7 +245,7 @@ function EditBorrow() {
                                                             >
                                                                 <img
                                                                     className="img-fluid"
-                                                                    src={item.image}
+                                                                    src={linkImageDevice[item.id]}
                                                                     alt=""
                                                                 />
                                                             </Link>
