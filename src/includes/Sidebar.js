@@ -1,6 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 function Sidebar(props) {
+	const [acc, setAcc] = useState(JSON.parse(localStorage.getItem('user')));
+
+	const LogOut = () => {
+		localStorage.removeItem('user');
+		localStorage.removeItem('jwtToken');
+		setAcc(null);
+		Swal.fire({
+			icon: "success",
+			title: "Đăng xuất thành công!",
+			showConfirmButton: false,
+			timer: 1500,
+		});
+	};
 	return (
 		<>
 			<div className="aside-menu overflow-hidden">
@@ -46,7 +60,7 @@ function Sidebar(props) {
 						</li>
 
 						<li className="menu-item">
-							<Link to={'/users/logout'} className="menu-link">
+							<Link to={'/login'} onClick={LogOut} className="menu-link">
 								<span className="menu-icon"><i className="fas fa-book"></i></span>
 								<span className="menu-text">Thoát</span>
 							</Link>

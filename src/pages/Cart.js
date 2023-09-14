@@ -109,7 +109,6 @@ function Cart(props) {
     }, []);
   // Set gia tri mac dinh cho lesson_name va quantity
        
-    if (acc1 !== null){
 
 
     const handleRemove = (index) => {
@@ -149,6 +148,7 @@ function Cart(props) {
             console.error('An error occurred:', error);
         }
     };
+    if (acc1 !== null){
 
     return (
         <LayoutMaster>

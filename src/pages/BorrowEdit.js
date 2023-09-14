@@ -145,6 +145,7 @@ function EditBorrow() {
     
 
     console.log(the_devices);
+    if (acc1 !== null) {
     return (
 
         <LayoutMaster>
@@ -341,6 +342,9 @@ function EditBorrow() {
             </Formik>
         </LayoutMaster>
     );
+    } else {
+    navigate("/login");
+    }
 }
 
 export default EditBorrow;

@@ -10,16 +10,11 @@ function Borrow(props) {
     const navigate = useNavigate();
     const [borrows, setBorrows] = useState([]);
     const user = JSON.parse(localStorage.getItem('user'));
-
     // Phan trang
     const [page, setPage] = useState(1);
     const [pageData, setPageData] = useState({});
     // Search
-    const [filter, setFilter] = useState({ is_active: 1 });
-
-    if (user === null) {
-        navigate('/login')
-    }
+    const [filter, setFilter] = useState({ user_id: user.id });
 
     useEffect(() => {
         BorrowModel.getAllBorrows({
@@ -28,14 +23,7 @@ function Borrow(props) {
         }).then(res => {
             setBorrows(res.data);
             // Phan trang
-            const meta = {
-                last_page: res.last_page,
-                total: res.total,
-                from: res.from,
-                to: res.to,
-                current_page: res.current_page
-            }
-            setPageData(meta);
+            setPageData(res.meta);
         }).catch(err => {
             console.error('Error fetching data:', err);
         })
@@ -48,6 +36,7 @@ function Borrow(props) {
             [event.target.name]: event.target.value
         });
     }
+    if (user !== null) {
     return (
         <LayoutMaster>
             <Breadcrumb page_title="Danh sách thiết bị" />
@@ -60,6 +49,7 @@ function Borrow(props) {
                                 <form action="{{ route('devices.index') }}" method="GET" id="form-search" onChange={handleChangeFilter}>
                                     <div className="row">
                                         <div className="col">
+                                            <label>Ngày mượn từ</label>
                                             <input
                                                 name="searchBorrowDate"
                                                 className="form-control"
@@ -68,6 +58,7 @@ function Borrow(props) {
                                             />
                                         </div>
                                         <div className="col">
+                                            <label>Ngày mượn đến</label>
                                             <input
                                                 name="searchBorrowDate_to"
                                                 className="form-control"
@@ -76,31 +67,28 @@ function Borrow(props) {
                                             />
                                         </div>
                                         <div className="col">
+                                            <label>Tình trạng trả</label>
                                             <select
                                                 name="searchStatus"
                                                 className="form-control"
                                             >
                                                 <option value="">-- Chọn tình trạng --</option>
-                                                <option value="Đã trả">Đã trả</option>
-                                                <option value="Chưa trả">Chưa trả</option>
+                                                <option value="1">Đã trả</option>
+                                                <option value="0">Chưa trả</option>
                                             </select>
                                         </div>
 
                                         <div className="col">
+                                            <label>Trạng thái duyệt</label>
                                             <select
                                                 name="searchApproved"
                                                 className="form-control"
                                             >
                                                 <option value="">-- Chọn xét duyệt --</option>
-                                                <option value="Đã duyệt">Đã duyệt</option>
-                                                <option value="Chưa duyệt">Chưa duyệt</option>
-                                                <option value="Từ chối">Từ chối</option>
+                                                <option value="0">Chưa duyệt</option>
+                                                <option value="1">Đã duyệt</option>
+                                                <option value="2">Từ chối</option>
                                             </select>
-                                        </div>
-                                        <div className="col-lg-2">
-                                            <button className="btn btn-secondary" type="submit">
-                                                Tìm Kiếm
-                                            </button>
                                         </div>
                                     </div>
                                 </form>
@@ -124,21 +112,11 @@ function Borrow(props) {
                                 {borrows.map((borrow, index) => (
                                     <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{user.name}</td>
-                                        <td>{borrow.created_date}</td>
-                                        <td>{new Date(borrow.borrow_date).toLocaleDateString()}</td>
-                                        <td>
-                                            {borrow.status ? 'Đã trả' : 'Chưa trả'} ({borrow.tong_tra}/{borrow.tong_muon})
-                                        </td>                                                <td>{borrow.approved === '2' ? 'Từ chối' : (borrow.approved === '1' ? 'Đã duyệt' : 'Chưa duyệt')}</td>
-                                        <td>
-                                            <Link
-                                                to={`/borrows/${borrow.id}/edit`}
-                                                className="btn btn-sm btn-icon btn-secondary"
-                                            >
-                                                <i className="fas fa-pencil-alt"></i> {/* Biểu tượng "Sửa" */}
-                                            </Link>
-                                        </td>
-                                       
+                                        <td>{borrow.user_name}</td>
+                                        <td>{borrow.created_date_format}</td>
+                                        <td>{borrow.borrow_date_format}</td>
+                                        <td>{borrow.status_format} ({borrow.tong_tra}/{borrow.tong_muon})</td>
+                                        <td>{borrow.approved_format}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -150,5 +128,8 @@ function Borrow(props) {
 
         </LayoutMaster>
     );
+    } else {
+      navigate("/login");
+    }
 }
 export default Borrow;
