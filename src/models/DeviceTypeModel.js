@@ -12,4 +12,4 @@ class DeviceTypeModel {
     }
 }
 
-export default DeviceTypeModel;
+export default new DeviceTypeModel;

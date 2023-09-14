@@ -12,18 +12,25 @@ import Breadcrumb from '../includes/Breadcrumb';
 import Pagination from '../includes/elements/Pagination';
 
 function DeviceList(props) {
+    const navigate = useNavigate();
     const [devices, setDevices] = useState([]);
     const [deviceTypes, setDeviceTypes] = useState([]);
     const cart = useSelector((state) => state.cart);
     const dispatch = useDispatch();
     const [acc1, setAcc1] = useState(JSON.parse(localStorage.getItem('user')));
-    const navigate = useNavigate();
 
- // Phan trang
- const [page, setPage] = useState(1);
- const [pageData, setPageData] = useState({});
- // Search
- const [filter, setFilter] = useState({});
+    // Phan trang
+    const [page, setPage] = useState(1);
+    const [pageData, setPageData] = useState({});
+    // Search
+    const [filter, setFilter] = useState({});
+
+    useEffect(() => {
+        DeviceTypeModel.getDeviceType().then((res) => {
+            setDeviceTypes(res);
+        })
+    }, []);
+
 
     useEffect(() => {
         DeviceModel.getAllDevices({
@@ -39,6 +46,7 @@ function DeviceList(props) {
     }, [page, filter]);
 
     const handleChangeFilter = (event) => {
+        console.log(event.target.value);
         setPage(1);
         setFilter({
             ...filter,
@@ -117,13 +125,19 @@ function DeviceList(props) {
                                             </div>
 
                                             <div className="col">
-                                                <input
-                                                    name="searchDeviceType"
+                                                <select
+                                                    name="device_type_id"
                                                     className="form-control"
-                                                    type="text"
-                                                    placeholder="Tìm theo loại thiết bị..."
-                                                />
+                                                >
+                                                    <option value="">Tất cả</option>
+                                                    {deviceTypes.map((deviceType) => (
+                                                        <option key={deviceType.id} value={deviceType.id}>
+                                                            {deviceType.name}
+                                                        </option>
+                                                    ))}
+                                                </select>
                                             </div>
+
                                         </div>
                                     </form>
                                 </div>
@@ -141,18 +155,17 @@ function DeviceList(props) {
                                     </thead>
                                     <tbody>
                                         {devices.map((device, index) => (
-
                                             <tr key={device.id}>
                                                 <td>{index + 1}</td>
                                                 <td className="device-cell">
                                                     <div className="device-info">
-                                                        <Link to={`/borrows/${device.id}`} className="tile tile-img mr-1">
+                                                        <div className="tile tile-img mr-1">
                                                             <img
                                                                 className="img-fluid"
                                                                 src={device.url_image}
                                                                 alt={device.name}
                                                             />
-                                                        </Link>
+                                                        </div>
                                                         <span>{device.name}</span>
                                                     </div>
                                                 </td>
