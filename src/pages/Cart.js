@@ -123,30 +123,34 @@ function Cart(props) {
     };
 
 
-    const handleSubmit = async (values, { resetForm }) => {
-        try {
-            const response = await BorrowModel.createBorrow(values);
-
-            if (response) {
-                console.log('Borrow record created successfully:', response.data);
-                localStorage.removeItem('cart');
-                dispatch({ type: SET_CART, payload: [] });
-
-                // Show a success message in Vietnamese
+    const handleSubmit = (values, { resetForm }) => {
+        BorrowModel.checkBorrow(values).then((res) => {
+            if (res.success) {
+                BorrowModel.createBorrow(values).then((response) => {
+                    console.log('Borrow record created successfully:', response.data);
+                    localStorage.removeItem('cart');
+                    dispatch({ type: SET_CART, payload: [] });
+                    // Show a success message in Vietnamese
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công!',
+                        text: 'Tạo phiếu mượn thành công!',
+                    });
+                    resetForm(); // Clear the form fields if needed
+                    navigate('/borrows'); // Navigate to the 'borrows' page
+                })
+            }else{
+                console.log(res);
                 Swal.fire({
-                    icon: 'success',
-                    title: 'Thành công!',
-                    text: 'Tạo phiếu mượn thành công!',
+                    icon: 'error',
+                    title: 'Có thiết bị đang được mượn',
+                    html: res.error_html,
+                    width: 800,
                 });
-
-                resetForm(); // Clear the form fields if needed
-                navigate('/borrows'); // Navigate to the 'borrows' page
-            } else {
-                console.error('Error creating borrow record.');
             }
-        } catch (error) {
-            console.error('An error occurred:', error);
-        }
+        }).catch((error) => {
+
+        })
     };
     if (acc1 !== null){
 
