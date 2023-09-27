@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 import DeviceTypeModel from '../models/DeviceTypeModel';
 import Breadcrumb from '../includes/Breadcrumb';
 import Pagination from '../includes/elements/Pagination';
-
+import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 function DeviceList(props) {
     const navigate = useNavigate();
     const [devices, setDevices] = useState([]);
@@ -173,13 +173,21 @@ function DeviceList(props) {
                                                 <td>{device.devicetype.name}</td>
 
                                                 <td>
-                                                    {device.quantity > 0 && (
+                                                    {device.quantity > 0 || true ? (
                                                         <button
                                                             onClick={() => handleAddToCart(device)}
                                                             className="btn btn-success btn-sm"
                                                         >
                                                             <FontAwesomeIcon icon={faPlus} />
                                                         </button>
+                                                    ) : (
+                                                        <Link to={`/calendar/${device.id}`}>
+                                                            <FontAwesomeIcon
+                                                                icon={faCalendarAlt}
+                                                                title="Hết hàng"
+                                                                className="text-muted"
+                                                            />
+                                                        </Link>
                                                     )}
                                                 </td>
 

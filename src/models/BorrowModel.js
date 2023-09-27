@@ -20,19 +20,23 @@ class BorrowModel {
     
 
     async createBorrow(data) {
-            const res = await axios.post(this.api_url, data);
-            return res.data;
-        } 
+        const res = await axios.post(this.api_url, data);
+        return res.data;
+    } 
+    async checkBorrow(data) {
+        const res = await axios.post(this.api_url + '/checkBorrow', data);
+        return res.data;
+    } 
 
-        async destroy(id) {
-            const res = await axios.delete(`${this.api_url}/${id}`);
-            return res.data;
-        }
-        
-        async update(id,data) {
-            const res = await axios.put(`${this.api_url}/${id}`, data);
-            return res.data;
-        } 
+    async destroy(id) {
+        const res = await axios.delete(`${this.api_url}/${id}`);
+        return res.data;
+    }
+    
+    async update(id,data) {
+        const res = await axios.put(`${this.api_url}/${id}`, data);
+        return res.data;
+    } 
 }
 
 export default new BorrowModel;

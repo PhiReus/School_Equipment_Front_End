@@ -8,12 +8,14 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import UserProfile from "./pages/users/UserProfile";
 import DeviceList from "./pages/DeviceList";
 import NotFound from "./pages/NotFound";
+import Calendar from "./pages/Calendar";
 
 function App() {
   return (
     <>
       <Routes>
-      <Route path="/cart" element={<Cart/>}></Route>
+        <Route path="/cart" element={<Cart/>}></Route>
+        <Route path="/calendar/:id" element={<Calendar/>}></Route>
         <Route path="/users/profile" element={<UserProfile />}></Route>
         <Route path="/users/update-profile" element={<UserEdit />}></Route>
         <Route path="/borrows" element={<Borrow />}></Route>
