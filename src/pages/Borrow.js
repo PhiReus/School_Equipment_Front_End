@@ -66,7 +66,7 @@ function Borrow(props) {
     if (user !== null) {
         return (
             <LayoutMaster>
-                <Breadcrumb page_title="Danh sách thiết bị" />
+                <Breadcrumb page_title="Danh sách phiếu mượn" />
 
                 <div className="page-section">
                     <div className="card card-fluid">

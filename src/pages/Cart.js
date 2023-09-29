@@ -246,7 +246,7 @@ function Cart(props) {
                                                     <th>Tiết PCCT</th>
                                                     <th>Lớp</th>
                                                     <th>Tiết TKB</th>
-                                                    <th>Ngày trả</th>
+                                                    <th>Ngày dạy</th>
 
                                                     <th></th>
 

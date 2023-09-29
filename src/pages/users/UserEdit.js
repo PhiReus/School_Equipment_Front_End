@@ -236,6 +236,7 @@ function UserEdit(props) {
                                   as="select"
                                   name="group_id"
                                   className="form-control"
+                                  disabled
                                 >
                                   {groups.map((group) => (
                                     <option
