@@ -50,7 +50,7 @@ function Cart(props) {
 
         // Lấy ngày hiện tại và định dạng thành chuỗi yyyy-MM-ddTHH:mm để điền vào trường "Ngày tạo phiếu"
         const currentDate = new Date();
-        const formattedDate = format(currentDate, "HH:mm:ss dd/MM/yyyy");
+        const formattedDate = format(currentDate, "dd/MM/yyyy");
         setCreatedAt(formattedDate);
         RoomModel.getRoom()
             .then((response) => {
