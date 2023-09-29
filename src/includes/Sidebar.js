@@ -25,7 +25,7 @@ function Sidebar(props) {
 						<li className="menu-item">
 							<Link to={'/'} className="menu-link">
 								<span className="menu-icon"><i className="fas fa-book"></i></span>
-								<span className="menu-text">Thiết Bị</span>
+								<span className="menu-text">Danh Sách Thiết Bị</span>
 							</Link>
 						</li>
 
