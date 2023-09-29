@@ -11,10 +11,12 @@ import DeviceTypeModel from '../models/DeviceTypeModel';
 import Breadcrumb from '../includes/Breadcrumb';
 import Pagination from '../includes/elements/Pagination';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+import DepartmentModel from '../models/DepartmentModel';
 function DeviceList(props) {
     const navigate = useNavigate();
     const [devices, setDevices] = useState([]);
     const [deviceTypes, setDeviceTypes] = useState([]);
+    const [departments, setDepartments] = useState([]);
     const cart = useSelector((state) => state.cart);
     const dispatch = useDispatch();
     const [acc1, setAcc1] = useState(JSON.parse(localStorage.getItem('user')));
@@ -28,6 +30,9 @@ function DeviceList(props) {
     useEffect(() => {
         DeviceTypeModel.getDeviceType().then((res) => {
             setDeviceTypes(res);
+        });
+        DepartmentModel.all().then((res) => { 
+            setDepartments(res);
         })
     }, []);
 
@@ -137,7 +142,19 @@ function DeviceList(props) {
                                                     ))}
                                                 </select>
                                             </div>
-
+                                            <div className="col">
+                                                <select
+                                                    name="department_id"
+                                                    className="form-control"
+                                                >
+                                                    <option value="">Tìm theo bộ môn...</option>
+                                                    {departments.map((department) => (
+                                                        <option key={department.id} value={department.id}>
+                                                            {department.name}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>
@@ -151,6 +168,9 @@ function DeviceList(props) {
                                             <th>Tên thiết bị</th>
                                             <th>Số lượng</th>
                                             <th>Loại thiết bị</th>
+                                            <th>Bộ môn</th>
+                                            <th></th>
+
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -171,7 +191,7 @@ function DeviceList(props) {
                                                 </td>
                                                 <td>{device.quantity}</td>
                                                 <td>{device.devicetype.name}</td>
-
+                                                <td>{device.department.name}</td>
                                                 <td>
                                                     {device.quantity > 0 || true ? (
                                                         <button
