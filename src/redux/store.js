@@ -17,7 +17,7 @@ const store = createStore(rootReducer,applyMiddleware(myMiddleware));
 
 // theo dõi trạng thái
 store.subscribe(() => {
-    console.log(store.getState())
+    //console.log(store.getState())
 });
 
 // Export ra để dùng ở các component

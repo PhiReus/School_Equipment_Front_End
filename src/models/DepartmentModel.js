@@ -1,11 +1,11 @@
-import axios from "axios";
+import axiosClient from "./axiosClient";
 
 class DepartmentModel {
     constructor () {
-        this.api_url = 'http://127.0.0.1:8000/api/departments/';
+        this.api_url = '/api/departments/';
     }
     async all() {
-        const res = await axios.get(this.api_url);
+        const res = await axiosClient.get(this.api_url);
         return res.data;
       }
     

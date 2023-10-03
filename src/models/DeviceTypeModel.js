@@ -1,13 +1,13 @@
-import axios from 'axios';
+import axiosClient from './axiosClient';
 
 
 class DeviceTypeModel {
       constructor() {
-        this.api_url = 'http://127.0.0.1:8000/api/device_types';
+        this.api_url = '/api/device_types';
     }
 
     async getDeviceType() {
-        const res = await axios.get(this.api_url);
+        const res = await axiosClient.get(this.api_url);
         return res.data;
     }
 }

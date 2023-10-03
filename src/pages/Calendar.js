@@ -16,7 +16,7 @@ function Calendar(props) {
         DeviceModel.getDeviceCalendar(id)
           .then((res) => {
             setEvents(res.data);
-            console.log(res.data);
+            //console.log(res.data);
           })
           .catch((err) => {
             console.error(err);

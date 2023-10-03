@@ -68,7 +68,7 @@ function Cart(props) {
         const cartData = JSON.parse(localStorage.getItem('cart')) || [];
         setData(cartData);
 
-        console.log(cartData);
+        //console.log(cartData);
 
        let emptyDevice = [];
         let emptyLessons = [];
@@ -100,7 +100,7 @@ function Cart(props) {
             return_date: emptyReturn,
         }
 
-        console.log(userData);
+        //console.log(userData);
         setFormData({
             ...formData,
             devices: new_devices,
@@ -127,7 +127,7 @@ function Cart(props) {
         BorrowModel.checkBorrow(values).then((res) => {
             if (res.success) {
                 BorrowModel.createBorrow(values).then((response) => {
-                    console.log('Borrow record created successfully:', response.data);
+                    //console.log('Borrow record created successfully:', response.data);
                     localStorage.removeItem('cart');
                     dispatch({ type: SET_CART, payload: [] });
                     // Show a success message in Vietnamese
@@ -140,7 +140,7 @@ function Cart(props) {
                     navigate('/borrows'); // Navigate to the 'borrows' page
                 })
             }else{
-                console.log(res);
+                //console.log(res);
                 Swal.fire({
                     icon: 'error',
                     title: 'Có thiết bị đang được mượn',

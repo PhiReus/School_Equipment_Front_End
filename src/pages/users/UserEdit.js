@@ -39,7 +39,7 @@ function UserEdit(props) {
   const [groups, setGroups] = useState([]);
   const [nests, setNests] = useState([]);
   useEffect(() => {
-    // console.log(acc1.id);
+    // //console.log(acc1.id);
     UserModel.find(acc.id)
       .then((res) => {
         setForm(res.data);
@@ -53,7 +53,7 @@ function UserEdit(props) {
     GroupModel.all()
       .then((res) => {
         setGroups(res);
-        // console.log(res);
+        // //console.log(res);
       })
       .catch((err) => {
         console.error(err);
@@ -77,14 +77,14 @@ function UserEdit(props) {
             showConfirmButton: false,
             timer: 1500,
           });
-          console.log(res);
+          //console.log(res);
           navigate("/users/profile");
         })
         .catch((err) => {
           console.error("Lỗi khi sửa :", err);
         });
     };
-    // console.log(form);
+    // //console.log(form);
   
     if (acc !== null) {
     return (

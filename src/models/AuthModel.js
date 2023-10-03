@@ -1,18 +1,18 @@
-import axios from "axios";
+import axiosClient from './axiosClient';
 
 class AuthModel {
   constructor() {
-    this.api_url = "http://127.0.0.1:8000/api/auth/";
+    this.api_url = "/api/auth/";
   }
   async login(credentials) {
-    // console.log(credentials);
-    const res = await axios.post(this.api_url + "login", credentials);
+    // //console.log(credentials);
+    const res = await axiosClient.post(this.api_url + "login", credentials);
     return res;
   }
 
   async fogotpassword(email) {
-    // console.log(credentials);
-    const res = await axios.post(this.api_url + "forgot_password", email );
+    // //console.log(credentials);
+    const res = await axiosClient.post(this.api_url + "forgot_password", email );
     return res;
   }
 
@@ -23,7 +23,7 @@ class AuthModel {
         headers: { Authorization: `Bearer ${token}` },
       };
 
-      await axios.post(this.api_url + "logout", null, config);
+      await axiosClient.post(this.api_url + "logout", null, config);
       return true;
     } catch (err) {
       return false;

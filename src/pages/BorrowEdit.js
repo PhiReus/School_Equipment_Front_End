@@ -143,9 +143,6 @@ function EditBorrow() {
         }
     }
 
-    
-
-    console.log(the_devices);
     if (acc1 !== null) {
     return (
 
@@ -199,7 +196,7 @@ function EditBorrow() {
                                                 className="form-control"
                                                 placeholder="Nhập ngày mượn"
                                             />
-                                            {/* {console.log(formData)} */}
+                                            {/* {//console.log(formData)} */}
                                             {errors.borrow_date && touched.borrow_date && (
                                                 <div style={{ color: 'red' }}>{formData.borrow_date}</div>
                                             )}

@@ -51,14 +51,14 @@ function DeviceList(props) {
     }, [page, filter]);
 
     const handleChangeFilter = (event) => {
-        console.log(event.target.value);
+        //console.log(event.target.value);
         setPage(1);
         setFilter({
             ...filter,
             [event.target.name]: event.target.value
         });
     }
-    console.log(devices);
+    //console.log(devices);
     if (acc1 !== null) {
 
 

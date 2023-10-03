@@ -27,7 +27,7 @@ function UserProfile(props) {
     fetchData();
   }, []);
 
-  // console.log(acc);
+  // //console.log(acc);
   const [groups, setGroups] = useState([]);
   const [nests, setNests] = useState([]);
   const getGroupNameById = (groupId) => {
@@ -44,7 +44,7 @@ function UserProfile(props) {
     GroupModel.all()
       .then((res) => {
         setGroups(res);
-        // console.log(res);
+        // //console.log(res);
       })
       .catch((err) => {
         console.error(err);
