@@ -1,11 +1,13 @@
 import React, { Children } from "react";
-import Header from "../includes/Header1";
+import Header from "../includes/Header";
 import Sidebar from "../includes/Sidebar";
+import { useSelector } from "react-redux";
 
 function LayoutMaster({ children }) {
+  const crShowMenu = useSelector((state) => state.showMenu);
   return (
     <>
-      <div className="app">
+      <div className={ crShowMenu ? 'app' : 'app has-compact-menu' }>
         <Header />
         <main className="app-main">
           <div className="wrapper">

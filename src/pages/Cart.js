@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import LayoutMaster from '../layouts/LayoutMaster';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux'; // Thêm import cho useDispatch
@@ -12,9 +11,7 @@ import RoomModel from '../models/RoomModel';
 import BorrowModel from '../models/BorrowModel';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'; //
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-const imageBaseUrl = 'http://127.0.0.1:8000'; // Đường dẫn cơ sở cho ảnh
 
 const SignupSchema = Yup.object().shape({
     borrow_date: Yup.string().required('Vui lòng nhập ngày mượn!'),

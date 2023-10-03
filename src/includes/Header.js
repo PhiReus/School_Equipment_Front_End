@@ -2,8 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import UserModel from "../models/UserModel";
+import { useDispatch, useSelector } from 'react-redux';
+import { SET_CART, SET_MENU } from "../redux/action";
 function Header(props) {
 	const [acc, setAcc] = useState(JSON.parse(localStorage.getItem('user')));
+    const dispatch = useDispatch();
+	const crShowMenu = useSelector((state) => state.showMenu);
 
 	useEffect(() => {
 		UserModel.find(acc.id)
@@ -21,6 +25,13 @@ function Header(props) {
 		localStorage.removeItem('jwtToken');
 		setAcc(null);
 	};
+
+	const showMenu = () => {
+		dispatch({
+            type: SET_MENU,
+            payload: !crShowMenu,
+        });
+	}
 	return (
 		<>
 			<header className="app-header app-header-dark">
@@ -30,15 +41,13 @@ function Header(props) {
 					<div className="top-bar-brand">
 						{/* toggle aside menu */}
 						<button
+							onClick={showMenu}
 							className="hamburger hamburger-squeeze mr-2"
-							type="button"
-							data-toggle="aside-menu"
-							aria-label="toggle aside menu"
 						>
 							<span className="hamburger-box">
 								<span className="hamburger-inner" />
 							</span>
-						</button>{" "}
+						</button>
 						{/* /toggle aside menu */}
 						<Link to={'/'}>
 							MƯỢN THIẾT BỊ
@@ -47,11 +56,9 @@ function Header(props) {
 					<div className="top-bar-list">
 						<div className="top-bar-item px-2 d-md-none d-lg-none d-xl-none">
 							<button
+								onClick={showMenu}
 								className="hamburger hamburger-squeeze"
-								type="button"
-								data-toggle="aside"
-								aria-label="toggle menu"
-							>
+								type="button">
 								<span className="hamburger-box">
 									<span className="hamburger-inner" />
 								</span>
