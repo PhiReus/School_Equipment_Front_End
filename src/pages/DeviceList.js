@@ -115,7 +115,7 @@ function DeviceList(props) {
                                                     name="searchName"
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder="Tìm theo tên..."
+                                                    placeholder=" tên..."
                                                 />
                                             </div>
                                             <div className="col">
@@ -123,7 +123,7 @@ function DeviceList(props) {
                                                     name="searchQuantity"
                                                     className="form-control"
                                                 >
-                                                    <option value="">Tìm theo tình trạng</option>
+                                                    <option value=""> tình trạng</option>
                                                     <option value="1">Thiết bị còn</option>
                                                     <option value="0">thiết bị đã hết</option>
                                                 </select>
@@ -134,7 +134,7 @@ function DeviceList(props) {
                                                     name="device_type_id"
                                                     className="form-control"
                                                 >
-                                                    <option value="">Tìm theo loại thiết bị</option>
+                                                    <option value=""> loại thiết bị</option>
                                                     {deviceTypes.map((deviceType) => (
                                                         <option key={deviceType.id} value={deviceType.id}>
                                                             {deviceType.name}
@@ -147,7 +147,7 @@ function DeviceList(props) {
                                                     name="department_id"
                                                     className="form-control"
                                                 >
-                                                    <option value="">Tìm theo bộ môn...</option>
+                                                    <option value=""> bộ môn...</option>
                                                     {departments.map((department) => (
                                                         <option key={department.id} value={department.id}>
                                                             {department.name}

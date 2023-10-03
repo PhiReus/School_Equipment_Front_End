@@ -81,7 +81,7 @@ function Borrow(props) {
                                                     name="searchBorrowDate"
                                                     className="form-control"
                                                     type="date"
-                                                    placeholder="Tìm theo ngày mượn từ..."
+                                                    placeholder=" ngày mượn từ..."
                                                 />
                                             </div>
                                             <div className="col">
@@ -90,7 +90,7 @@ function Borrow(props) {
                                                     name="searchBorrowDate_to"
                                                     className="form-control"
                                                     type="date"
-                                                    placeholder="Tìm theo ngày mượn đến..."
+                                                    placeholder=" ngày mượn đến..."
                                                 />
                                             </div>
                                             <div className="col">
